@@ -1,0 +1,255 @@
+<!doctype html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+
+        <title>ScaleGen</title>
+        <meta name="description" content="ScaleGen">
+        <meta name="author" content="Benoit L'huissier">
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+        <!-- CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+        <link rel="stylesheet" href="css/page.css">
+        <link rel="stylesheet" href="css/colorPicker.css" type="text/css" />
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script type="text/javascript" src="js/paper-full.js"></script>
+        <script type="text/javascript" src="js/rulerGenerator_tmp.js"></script>
+        <script language="javascript" type="text/javascript" src="js/jquery.colorPicker.min.js"/></script>
+
+        <script type="text/javascript">
+            $(function () {
+              $('[data-toggle="tooltip"]').tooltip()
+            })
+
+        </script>
+         <script type="text/javascript">
+            $(function () {
+              $('#color1').colorPicker()
+              $('#color2').colorPicker()
+              $('#color3').colorPicker()
+              $('#color4').colorPicker()
+              $('#ScaleColor').colorPicker()
+              $('#color6').colorPicker()
+            })
+          </script>
+    </head>
+
+    <body>
+      <!--<script src="js/scripts.js"></script> -->
+        <div class="container">
+            <div class="jumbotron">
+                <h1>ScaleGen</h1> 
+                    <p>Générateur d'échelles de type densimétrique</p> 
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <form id="rulerParameters" action="" >
+                    <div class="card border mb-3">
+                        <div class="card-header">
+                        Paramètres d'entrée
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group mb-3">
+                                <div class="input-group">
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text" id="title">Titre</span>
+                                  </div>
+                                  <input type="text" class="form-control cp4" placeholder="Mustimétrie" aria-label="title">
+                                  <a href="#" data-toggle="tooltip" title="Hooray!">?</a>
+                                </div>
+                            </div>
+                            <div class="form-row mb-3">
+                                <div class="input-group col-md-6">
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text" >Haut</span>
+                                  </div>
+                                  <input type="text" id="rulerHigh" class="form-control" aria-label="title" value="990">
+                                </div>                  
+                                <div class="input-group col-md-6">
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text" >Bas</span>
+                                  </div>
+                                  <input type="text" id="rulerLow" class="form-control" aria-label="title" value="1130">
+                                </div>
+                            </div>
+                            <div class="form-row mb-3">
+                                <div class="input-group col-md-6">
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text">Intervalle de Graduation</span>
+                                  </div>
+                                  <input type="text" id="Increment" class="form-control" aria-label="title" value="1">
+                                </div>                  
+                                <div class="input-group col-md-3">
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text">de</span>
+                                  </div>
+                                  <input type="text" id="rulerStart" class="form-control" aria-label="title" value="980">
+                                </div>
+                                <div class="input-group col-md-3">
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text">à</span>
+                                  </div>
+                                  <input type="text" id="rulerStop" class="form-control" aria-label="title" value="1131">
+                                </div>
+                            </div>
+                            <div class="form-row mb-3">
+                                    <div class="input-group col-md-6">
+                                      <div class="input-group-prepend">
+                                        <span class="input-group-text" id="rulerHigh">Numéro abrégé</span>
+                                      </div>
+                                      <input type="text" class="form-control" aria-label="title" value="2">
+                                    </div>                  
+                                </div>
+                            <div class="form-row mb-3">
+                                <div class="input-group col-md-6">
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text" id="rulerHigh">Trait 1 - longueur</span>
+                                  </div>
+                                  <input type="text" class="form-control" aria-label="title" value="980">
+                                </div>                  
+                                <div class="input-group col-md-6">
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text" id="rulerLow">Epaisseur</span>
+                                  </div>
+                                  <input type="text" class="form-control" aria-label="title" value="1130">
+                                </div>
+                            </div>
+                            <div class="form-row mb-3">
+                                <div class="input-group col-md-6">
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text" id="rulerHigh">Trait 2- longueur</span>
+                                  </div>
+                                  <input type="text" class="form-control" aria-label="title" value="980">
+                                </div>                  
+                                <div class="input-group col-md-6">
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text" id="rulerLow">Epaisseur</span>
+                                  </div>
+                                  <input type="text" class="form-control" aria-label="title" value="1130">
+                                </div>
+                            </div>
+                            <div class="form-row mb-3">
+                                <div class="input-group col-md-6">
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text" id="rulerHigh">Trait 3 - longueur</span>
+                                  </div>
+                                  <input type="text" class="form-control" aria-label="title" value="980">
+                                </div>                  
+                                <div class="input-group col-md-6">
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text" id="rulerLow">Epaisseur</span>
+                                  </div>
+                                  <input type="text" class="form-control" aria-label="title" value="1130">
+                                </div>
+                            </div>
+                            <h5>Trait spéciaux</h5>
+                            <div class="form-row mb-3">   
+                                    <div class="input-group col-md-6">
+                                        <input type="checkbox">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="rulerLow">Trait A - valeur</span>
+                                        </div>
+                                            <input type="text" class="form-control" aria-label="title" value="">
+                                    </div>
+                                    <div class="input-group col-md-6">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="rulerHigh">Couleur</span><input id="color1" type="text" name="color1" value="#333399" />
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="form-row mb-3">   
+                                    <div class="input-group col-md-6">
+                                        <input type="checkbox">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="rulerLow">Trait B - valeur</span>
+                                        </div>
+                                            <input type="text" class="form-control" aria-label="title" value="">
+                                    </div>
+                                    <div class="input-group col-md-6">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="rulerHigh">Couleur</span><input id="color2" type="text" name="color1" value="#333399" />
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="form-row mb-3">   
+                                    <div class="input-group col-md-6">
+                                        <input type="checkbox">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="rulerLow">Trait C - valeur</span>
+                                        </div>
+                                            <input type="text" class="form-control" aria-label="title" value="">
+                                    </div>
+                                    <div class="input-group col-md-6">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="rulerHigh">Couleur</span><input id="color3" type="text" name="color1" value="#333399" />
+                                        </div>
+                                    </div>
+                            </div>
+                            <h5>Graduations - Texte</h5>
+                                <div class="form-row mb-3">
+                                    <div class="input-group col-md-6">
+                                      <div class="input-group-prepend">
+                                        <span class="input-group-text" id="rulerHigh">Numéro abrégé</span>
+                                      </div>
+                                      <input type="text" class="form-control" aria-label="title" value="2">
+                                    </div>
+                                    <div class="input-group col-md-6">
+                                        <div class="input-group-prepend">             
+                                            <span class="input-group-text" id="rulerHigh">Couleur</span><input id="color4" type="text" name="color1" value="#333399" />
+                                        </div>
+                                    </div>
+                                </div>
+                            <h5>Mise en forme</h5>
+                                <div class="form-row mb-3">
+                                        <div class="input-group col-md-6">
+                                            <span class="input-group-text" id="rulerHigh">Couleur de l'échelle</span><input id="ScaleColor" type="text" name="color1" value="#000000" />
+                                        </div>
+                                </div>
+                                <div class="form-row mb-3">
+                                        <div class="input-group col-md-6">
+                                            <span class="input-group-text" id="rulerHigh">Couleur de fond</span><input id="color6" type="text" name="color1" value="#333399" />
+                                        </div>
+                                </div>
+                            <input type="checkbox"><label>Afficher le trait vertical</label><br/>
+                            <input type="checkbox"><label>Afficher le cadre autour de l'échelle</label><br/>
+                            <label>Commentaire</label><br/>
+                            <textarea>
+                                
+                            </textarea>
+
+                        </div>
+                    </div>
+
+                    <a href="#" class="btn btn-primary">Générer</a>
+                    <input type="button" class="btn" value="Imprimer" id="printButton" onclick="printDiv('printableArea')" >
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <div class="card border mb-3">
+                        <div class="card-header">
+                                Liste des échelles
+                        </div>
+                        <div class="card-body">A faire</div>
+                    </div>
+                    <div class="card border mb-3">
+                        <div class="card-header">
+                                Générations précédentes
+                        </div>
+                        <div class="card-body">A faire</div>
+                    </div>
+                </div>
+            </div>
+            <page size="A4">
+                <div class="printZone">
+                    <div class="printBorders">
+                        <canvas id="myCanvas" style="margin:1px;" resize></canvas>
+                    </div>
+                </div>
+            </page>
+        </div>  
+    </body>
+</html>
