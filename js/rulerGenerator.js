@@ -152,6 +152,12 @@ var updateVariables = function(){
     ruler.increment = parseInt(document.getElementById("Increment").value)
     ruler.start = parseInt(document.getElementById("rulerStart").value)
     ruler.stop = parseInt(document.getElementById("rulerStop").value)
+    ruler.line1length = parseInt(document.getElementById("line1length").value)
+    ruler.line1size = parseInt(document.getElementById("line1size").value)
+    ruler.line2length = parseInt(document.getElementById("line2length").value)
+    ruler.line2size = parseInt(document.getElementById("line2size").value)
+    ruler.line3length = parseInt(document.getElementById("line3length").value)
+    ruler.line3size = parseInt(document.getElementById("line3size").value)
 }
 
 var build = function(){
@@ -178,18 +184,14 @@ var build = function(){
     for (i = MIN_ALCOHOL_VALUE; i <= MAX_ALCOHOL_VALUE; i+=ALCOHOL_INCREMENT) {
         arrayAlcoholValues[i]=0.0004304317136*Math.pow(i,3) - 0.0228699357*Math.pow(i,2) + 6.744733982*i + 116.0588879
     }
-    console.log(arrayAlcoholValues);
+    console.log(arrayTickValues);
 
-    //dra a rectangle around the scale
-    var line = new paper.Path.Line([20*mmtopx, 20*mmtopx], [20*mmtopx, arrayTickValues[ruler.low]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE]);//actual line instance
+    //draw the vertical line of the scale
+    var line = new paper.Path.Line([20*mmtopx, arrayTickValues[ruler.start]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE], [20*mmtopx, arrayTickValues[ruler.stop]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE]);//actual line instance
     line.strokeColor = ScaleColor.value;//color of ruler line
     line.strokeWidth = "1";//width of ruler line in pixels
     var j=0;
-        var ticks = new paper.Path.Line({
-        from: [20*mmtopx-30, 1],
-        to: [20*mmtopx, 1],
-        strokeColor: 'red'
-    });
+
     for (i = MIN_ALCOHOL_VALUE; i <= MAX_ALCOHOL_VALUE; i+=ALCOHOL_INCREMENT) {
             //i=(Math.round(i,5));
             console.log(i);
@@ -214,15 +216,16 @@ var build = function(){
             }
         }
     
-    for (i = ruler.high; i < ruler.low; i++) {
+    for (i = ruler.start; i <= ruler.stop; i++) {
             //i=(Math.round(i,5));
             //console.log(i);
             j+=5;
-            if(i%10==0.0){
+            if(i%10==0.0 && i>=ruler.high){
                 var ticks = new paper.Path.Line({
                     from: [20*mmtopx-30, arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
                     to: [20*mmtopx, arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
-                    strokeColor: ScaleColor.value
+                    strokeColor: ScaleColor.value,
+                    strokeWidth : ruler.line1size
                 });
                 var text = new paper.PointText(new paper.Point(20*mmtopx-30+19,arrayTickValues[i]*mmtopx -2 + CORRECT_VERTICAL_POSITION_SCALE));
                 text.justification = 'right';
@@ -233,46 +236,48 @@ var build = function(){
                 var ticks = new paper.Path.Line({
                     from: [20*mmtopx-20, arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
                     to: [20*mmtopx, arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
-                    strokeColor: ScaleColor.value
+                    strokeColor: ScaleColor.value,
+                    strokeWidth : ruler.line2size
                 });
             }
             else{
                 var ticks = new paper.Path.Line({
                     from: [20*mmtopx-10, arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
                     to: [20*mmtopx, arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
-                    strokeColor: ScaleColor.value
+                    strokeColor: ScaleColor.value,
+                    strokeWidth : ruler.line3size
                 });
             }
         }
-    var text = new paper.PointText(new paper.Point(20*mmtopx-70,arrayTickValues[ruler.low]*mmtopx +50 + CORRECT_VERTICAL_POSITION_SCALE));
+    var text = new paper.PointText(new paper.Point(20*mmtopx-70,arrayTickValues[ruler.stop]*mmtopx +60 + CORRECT_VERTICAL_POSITION_SCALE));
     text.justification = 'left';
     text.fillColor = ScaleColor.value;
     text.content = "Masse volumique";
     text.rotation=-90;
 
-    var text = new paper.PointText(new paper.Point(20*mmtopx-45,arrayTickValues[ruler.low]*mmtopx +50 + CORRECT_VERTICAL_POSITION_SCALE));
+    var text = new paper.PointText(new paper.Point(20*mmtopx-45,arrayTickValues[ruler.stop]*mmtopx +60 + CORRECT_VERTICAL_POSITION_SCALE));
     text.justification = 'left';
     text.fillColor = ScaleColor.value;
     text.content = "g/l (05) 20ºC";
     text.rotation=-90;
 
-    var text = new paper.PointText(new paper.Point(20*mmtopx-35,arrayTickValues[ruler.low]*mmtopx +50 + CORRECT_VERTICAL_POSITION_SCALE));
+    var text = new paper.PointText(new paper.Point(20*mmtopx-35,arrayTickValues[ruler.stop]*mmtopx +60 + CORRECT_VERTICAL_POSITION_SCALE));
     text.justification = 'left';
     text.fillColor = ScaleColor.value;
     text.content = "Alcool probable";
     text.rotation=-90;
 
-    var text = new paper.PointText(new paper.Point(20*mmtopx-30+19,arrayTickValues[ruler.low]*mmtopx +110 + CORRECT_VERTICAL_POSITION_SCALE));
+    var text = new paper.PointText(new paper.Point(20*mmtopx-30+19,arrayTickValues[ruler.stop]*mmtopx +120 + CORRECT_VERTICAL_POSITION_SCALE));
     text.justification = 'center';
     text.fillColor = ScaleColor.value;
     text.content = "MUSTIMETRIE";
 
-    var text = new paper.PointText(new paper.Point(20*mmtopx-30+19,arrayTickValues[ruler.low]*mmtopx +130 + CORRECT_VERTICAL_POSITION_SCALE));
+    var text = new paper.PointText(new paper.Point(20*mmtopx-30+19,arrayTickValues[ruler.stop]*mmtopx +140 + CORRECT_VERTICAL_POSITION_SCALE));
     text.justification = 'center';
     text.fillColor = ScaleColor.value;
     text.content = "COMPANY";
 
-    var text = new paper.PointText(new paper.Point(20*mmtopx-30+19,arrayTickValues[ruler.low]*mmtopx +150 + CORRECT_VERTICAL_POSITION_SCALE));
+    var text = new paper.PointText(new paper.Point(20*mmtopx-30+19,arrayTickValues[ruler.stop]*mmtopx +160 + CORRECT_VERTICAL_POSITION_SCALE));
     text.justification = 'center';
     text.fillColor = ScaleColor.value;
     text.content = "NAME";
