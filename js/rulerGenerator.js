@@ -1,3 +1,15 @@
+document.addEventListener("DOMContentLoaded", function(event) { 
+    document.getElementById("download-to-svg").onclick = function(){
+    d = new Date();
+    var fileName = "Scale_" + d.getHours() + d.getMinutes() + d.getSeconds() + ".svg"
+    var url = "data:image/svg+xml;utf8," + encodeURIComponent(paper.project.exportSVG({asString:true}));
+    var link = document.createElement("a");
+    link.download = fileName;
+    link.href = url;
+    link.click();
+    }
+});
+
 /* jshint asi: true*/
 var ruler = {};
 
@@ -10,8 +22,8 @@ var MAX_ALCOHOL_VALUE=18;
 var ALCOHOL_INCREMENT=0.5;
 
 var CORRECT_VERTICAL_POSITION_SCALE = -250;
-//
-
+var SCALE_ABSCISSA = 20;
+var exportButton = document.getElementById("exportButton");
 
 function printDiv(printPage) {
      var printContents = document.getElementById("printPage").innerHTML;
@@ -24,297 +36,215 @@ function printDiv(printPage) {
      document.body.innerHTML = originalContents;
 }
 
-var contructBorders = function(){
-    var rectangle = new paper.Rectangle(new paper.Point(0, 0), new paper.Size(40*mmtopx, 230*mmtopx));
-    var path = new paper.Path.Rectangle(rectangle);
-    path.strokeColor = 'black';
-    paper.view.draw();
-
-
-}
-
-var checkUnit = function(){
-    ruler.units = "centimeters"
-    var pixelsPerInch = 72//I don't think this needs to be in the object....
-    var pixelsPerCM  =  pixelsPerInch / ruler.cmPerInch
-
-    if (ruler.units === "centimeters"){
-        ruler.unitsAbbr= "cm."
-        ruler.pixelsPerUnit = pixelsPerCM
-    }
-    else{
-        ruler.pixelsPerUnit = 0
-        //console.error("Unexpected unit value. Unit value: "+rulerUnits)
-    }
-    ruler.heightPixels = ruler.height * ruler.pixelsPerUnit
-}
-
 var resizeCanvas = function(){
     document.getElementById("myCanvas").width = 210*mmtopx
-    //document.getElementById("myCanvas").width = ruler.width*ruler.pixelsPerUnit;
-    heightAddend = 50
     document.getElementById("myCanvas").height = 277*mmtopx
-    //document.getElementById("myCanvas").height = heightAddend+ ruler.height*ruler.pixelsPerUnit;
 }
 
 var constructRuler = function(){
     /* ruler.tickArray = [];//for prevention of redunancy, an member for each tick
     var layerArray = new Array(ruler.subUnitExponent)//Layers in the SVG file.
-
-    for (var exponentIndex = 0;  exponentIndex <= ruler.subUnitExponent ;  exponentIndex++) {
-        //loop thru each desired level of ticks, inches, halves, quarters, etc....
-        var tickQty = ruler.width * Math.pow(ruler.subUnitBase,exponentIndex)
-        layerArray[exponentIndex]= new paper.Layer();
-        layerArray[exponentIndex].name = ruler.subLabels[exponentIndex] + " Tick Group";
-
-        var startNo = $('#startNo').val() ;
-
-        highestTickDenomonatorMultiplier = ruler.ticksPerUnit / Math.pow(ruler.subUnitBase,exponentIndex)
-        //to prevent reduntant ticks, this multiplier is applied to crrent units to ensure consistent indexing of ticks.
-        for (var tickIndex = 0;  tickIndex <= tickQty ;  tickIndex++) {
-            ruler.masterTickIndex = highestTickDenomonatorMultiplier * tickIndex
-            // levelToLevelMultiplier =0.7
-            var tickHeight
-            tickHeight = ruler.heightPixels*Math.pow(ruler.levelToLevelMultiplier,exponentIndex)
-
-            var tickSpacing = ruler.pixelsPerUnit/(Math.pow(ruler.subUnitBase,exponentIndex))
-            //spacing between ticks, the fundemental datum on a ruler :-)
-            var finalTick = false
-            if(tickIndex === tickQty){finalTick = true}
-
-            var offsetTickIndex = parseInt(tickIndex) + parseInt(startNo)
-            tick(tickHeight,0, tickIndex, offsetTickIndex, exponentIndex, tickSpacing,finalTick);
-            //draws the ticks
-        }
-    }*/
-}
-
-var tick = function(tickHeight, horizPosition, tickIndex, offsetTickIndex, exponentIndex, tickSpacing,finalTick){
-    //exponentIndex is 0-6, how small it is, 6 being smallest
-    var x1 = horizPosition + (tickSpacing * tickIndex)
-    var x2 = x1 //x === x because lines are vertical
-    var y1 = 0//all lines start at top of screen
-    var y2 = tickHeight//downward
-
-    if (ruler.tickArray[ruler.masterTickIndex]===undefined || ruler.redundant) {
-        // if no tick exists already, or if we want redundant lines, draw the tick.
-        var line = new paper.Path.Line([x1, y1], [x2, y2]);//actual line instance
-        line.name = ruler.subLabels[exponentIndex]+ " Tick no. " + tickIndex //label for SVG editor
-        line.strokeColor = "black";//color of ruler line
-        line.strokeWidth = "1";//width of ruler line in pixels
-
-        ruler.tickArray[ruler.masterTickIndex]=true //register the tick so it is not duplicated
-            if (exponentIndex === 0) {//if is a primary tick, it needs a label
-                tickLabel(x1,y2,finalTick,offsetTickIndex,exponentIndex)
-            }
-    }   
-}
-
-var tickLabel = function(x1,y2,finalTick,tickIndex,exponentIndex){
-    //label the tick
-            var labelTextSize
-            var labelTextSizeInches = 18
-            var labelTextSizeCm = Math.round(labelTextSizeInches/ruler.cmPerInch)
-            if(ruler.units === "inches"){labelTextSize = labelTextSizeInches;}
-            else{labelTextSize = labelTextSizeCm;}
-            var xLabelOffset = 4
-            var yLabelOffset = 1
-            if (finalTick) {xLabelOffset = -1* xLabelOffset}//last label is right justified
-            var text = new paper.PointText(new paper.Point(x1+ xLabelOffset, y2+yLabelOffset));
-            text.justification = 'left';
-            if (finalTick) {text.justification = 'right';}//last label is right justified
-            text.fillColor = 'black';
-            text.content = tickIndex;
-            text.style = {
-            // fontFamily: 'Helvetica',
-            fontFamily: 'monospace',
-            fontWeight: 'bold',
-            fontSize: labelTextSize}
-            text.name = ruler.subLabels[exponentIndex] + " label no. " +tickIndex //label for SVG editor
+    */
 }
 
 var debug = function(){
     console.info("--All the variables---")
     console.info(ruler)//prints all attributes of ruler object
+
 }
 
 var updateVariables = function(){
-    ruler.units =  "centimeters";
-    //ruler.subUnitBase = $("input:radio[name=subUnits]:checked'").val();
-    //ruler.redundant =  $("input:checkbox[name=redundant]:checked'").val();
-    //ruler.width = $('#rulerWidth').val() ;
-    ruler.height = $('#rulerHeight').val() ;
-    //ruler.subUnitExponent = $('#subUnitExponent').val() ;
-    //ruler.levelToLevelMultiplier = $('#levelToLevelMultiplier').val();
-    ruler.cmPerInch = 2.54
-    ruler.high = parseInt(document.getElementById("rulerHigh").value)
-    ruler.low = parseInt(document.getElementById("rulerLow").value)
-    ruler.increment = parseInt(document.getElementById("Increment").value)
-    ruler.start = parseInt(document.getElementById("rulerStart").value)
-    ruler.stop = parseInt(document.getElementById("rulerStop").value)
-    ruler.line1length = parseInt(document.getElementById("line1length").value)
-    ruler.line1size = parseInt(document.getElementById("line1size").value)
-    ruler.line2length = parseInt(document.getElementById("line2length").value)
-    ruler.line2size = parseInt(document.getElementById("line2size").value)
-    ruler.line3length = parseInt(document.getElementById("line3length").value)
-    ruler.line3size = parseInt(document.getElementById("line3size").value)
+    ruler.size = parseInt(document.getElementById("rulerSize").value);
+    ruler.high = parseInt(document.getElementById("rulerHigh").value);
+    ruler.low = parseInt(document.getElementById("rulerLow").value);
+    ruler.increment = parseInt(document.getElementById("Increment").value);
+    ruler.start = parseInt(document.getElementById("rulerStart").value);
+    ruler.stop = parseInt(document.getElementById("rulerStop").value);
+    ruler.line1length = parseInt(document.getElementById("line1length").value);
+    ruler.line1size = parseInt(document.getElementById("line1size").value);
+    ruler.line2length = parseInt(document.getElementById("line2length").value);
+    ruler.line2size = parseInt(document.getElementById("line2size").value);
+    ruler.line3length = parseInt(document.getElementById("line3length").value);
+    ruler.line3size = parseInt(document.getElementById("line3size").value);
+    ruler.lineAvalue = parseInt(document.getElementById("lineAvalue").value);
+    ruler.lineBvalue = parseInt(document.getElementById("lineBvalue").value);
+    ruler.lineCvalue = parseInt(document.getElementById("lineCvalue").value);
+    ruler.displayVerticalLine = document.getElementById("displayVerticalLine").checked;
+    ruler.displayBorders = document.getElementById("displayBorders").checked;
+    ruler.arrayListSpecialValues = [ruler.lineAvalue, ruler.lineBvalue, ruler.lineCvalue];
+    ruler.arraySpecialValues = [];
+    ruler.arraySpecialValues[ruler.lineAvalue] = lineAcolor.value;
+    ruler.arraySpecialValues[ruler.lineBvalue] = lineBcolor.value;
+    ruler.arraySpecialValues[ruler. lineCvalue] = lineCcolor.value;
+
+    exportButton= document.getElementById('export-button');
+
+}
+var contructBorders = function(){
+    if(displayBorders){
+        var rectangle = new paper.Rectangle(new paper.Point(0, 0), new paper.Size(40*mmtopx, 230*mmtopx));
+        var path = new paper.Path.Rectangle(rectangle);
+        path.strokeColor = 'black';
+        }
 }
 
+var ScaleRuler = function() {
+
+
+}
 var build = function(){
     // Get a reference to the canvas object
     var canvas = document.getElementById('myCanvas');
     // Create an empty project and a view for the canvas:
     paper.setup(canvas);
 
-    contructBorders()
     updateVariables()
-    //checkUnit()
-    //checkSubUnitBase()    
-    //limitTickQty()
+    ScaleRuler()
     resizeCanvas()
     constructRuler()
     var arrayTickValues=[];
-     console.log(ruler.stop);
     //Load every volumic mass values in an array
     for (i = ruler.start; i <= ruler.stop; i+=ruler.increment) {
         arrayTickValues[i]=0.0000009009960777*Math.pow(i,3) - 0.003811527044*Math.pow(i,2) + 6.042122602*i - 3025.189377
     }
+    //scaling to the wished size. see https://stackoverflow.com/questions/5294955/how-to-scale-down-a-range-of-numbers-with-a-known-min-and-max-value
+    for (i = ruler.start; i <= ruler.stop; i+=ruler.increment) {
+        arrayTickValues[i]= (ruler.size/(ruler.low - ruler.high))*arrayTickValues[i] - (ruler.size*arrayTickValues[ruler.high])/(ruler.low - ruler.high) + arrayTickValues[ruler.high]
+    }
+    console.log(arrayTickValues);
+
     var arrayAlcoholValues = [];
     //loads every alcohol values in an array
     for (i = MIN_ALCOHOL_VALUE; i <= MAX_ALCOHOL_VALUE; i+=ALCOHOL_INCREMENT) {
         arrayAlcoholValues[i]=0.0004304317136*Math.pow(i,3) - 0.0228699357*Math.pow(i,2) + 6.744733982*i + 116.0588879
     }
+
+    for (i = MIN_ALCOHOL_VALUE; i <= MAX_ALCOHOL_VALUE; i+=ALCOHOL_INCREMENT) {
+        arrayAlcoholValues[i]= (ruler.size/(ruler.low - ruler.high))*arrayAlcoholValues[i] - (ruler.size*arrayTickValues[ruler.high])/(ruler.low - ruler.high) + arrayTickValues[ruler.high]
+    }
     console.log(arrayTickValues);
 
     //draw the vertical line of the scale
-    var line = new paper.Path.Line([20*mmtopx, arrayTickValues[ruler.start]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE], [20*mmtopx, arrayTickValues[ruler.stop]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE]);//actual line instance
+    if(ruler.displayVerticalLine){
+    var line = new paper.Path.Line([SCALE_ABSCISSA*mmtopx, arrayTickValues[ruler.start]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE], [SCALE_ABSCISSA*mmtopx, arrayTickValues[ruler.stop]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE]);//actual line instance
     line.strokeColor = ScaleColor.value;//color of ruler line
     line.strokeWidth = "1";//width of ruler line in pixels
     var j=0;
+    }
+    if(ruler.displayBorders){
+        contructBorders();
+    }
+
+
 
     for (i = MIN_ALCOHOL_VALUE; i <= MAX_ALCOHOL_VALUE; i+=ALCOHOL_INCREMENT) {
-            //i=(Math.round(i,5));
-            console.log(i);
             j+=5;
             if(i%1==0){
                 var ticks = new paper.Path.Line({
-                    from: [20*mmtopx+10, arrayAlcoholValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
-                    to: [20*mmtopx, arrayAlcoholValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
+                    from: [SCALE_ABSCISSA*mmtopx+ruler.line2length*mmtopx, arrayAlcoholValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
+                    to: [SCALE_ABSCISSA*mmtopx, arrayAlcoholValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
                     strokeColor: ScaleColor.value
                 });
-                var text = new paper.PointText(new paper.Point(20*mmtopx+7,arrayAlcoholValues[i]*mmtopx -5 + CORRECT_VERTICAL_POSITION_SCALE));
+                var text = new paper.PointText(new paper.Point(SCALE_ABSCISSA*mmtopx+7,arrayAlcoholValues[i]*mmtopx -5 + CORRECT_VERTICAL_POSITION_SCALE));
                 text.justification = 'left';
                 text.fillColor = ScaleColor.value;
                 text.content = i;
             }
             else{
                 var ticks = new paper.Path.Line({
-                    from: [20*mmtopx+5, arrayAlcoholValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
-                    to: [20*mmtopx, arrayAlcoholValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
+                    from: [SCALE_ABSCISSA*mmtopx+ruler.line3length*mmtopx, arrayAlcoholValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
+                    to: [SCALE_ABSCISSA*mmtopx, arrayAlcoholValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
                     strokeColor: ScaleColor.value
                 });
             }
         }
-    
+
     for (i = ruler.start; i <= ruler.stop; i++) {
-            //i=(Math.round(i,5));
-            //console.log(i);
             j+=5;
             if(i%10==0.0 && i>=ruler.high){
                 var ticks = new paper.Path.Line({
-                    from: [20*mmtopx-30, arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
-                    to: [20*mmtopx, arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
-                    strokeColor: ScaleColor.value,
+                    from: [SCALE_ABSCISSA*mmtopx-ruler.line1length*mmtopx, arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
+                    to: [SCALE_ABSCISSA*mmtopx, arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
+                    strokeColor: checkIfSpecialValue(ruler.arrayListSpecialValues, ruler.arraySpecialValues, i),
                     strokeWidth : ruler.line1size
                 });
-                var text = new paper.PointText(new paper.Point(20*mmtopx-30+19,arrayTickValues[i]*mmtopx -2 + CORRECT_VERTICAL_POSITION_SCALE));
+                var text = new paper.PointText(new paper.Point(SCALE_ABSCISSA*mmtopx-30+19,arrayTickValues[i]*mmtopx -2 + CORRECT_VERTICAL_POSITION_SCALE));
                 text.justification = 'right';
                 text.fillColor = ScaleColor.value;
                 text.content = i;
             }
             else if(i%5==0){
                 var ticks = new paper.Path.Line({
-                    from: [20*mmtopx-20, arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
-                    to: [20*mmtopx, arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
+                    from: [SCALE_ABSCISSA*mmtopx-ruler.line2length*mmtopx, arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
+                    to: [SCALE_ABSCISSA*mmtopx, arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
                     strokeColor: ScaleColor.value,
                     strokeWidth : ruler.line2size
                 });
             }
             else{
                 var ticks = new paper.Path.Line({
-                    from: [20*mmtopx-10, arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
-                    to: [20*mmtopx, arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
+                    from: [SCALE_ABSCISSA*mmtopx-ruler.line3length*mmtopx, arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
+                    to: [SCALE_ABSCISSA*mmtopx, arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE],
                     strokeColor: ScaleColor.value,
                     strokeWidth : ruler.line3size
                 });
             }
         }
-    var text = new paper.PointText(new paper.Point(20*mmtopx-70,arrayTickValues[ruler.stop]*mmtopx +60 + CORRECT_VERTICAL_POSITION_SCALE));
+    var text = new paper.PointText(new paper.Point(SCALE_ABSCISSA*mmtopx-70,arrayTickValues[ruler.stop]*mmtopx +60 + CORRECT_VERTICAL_POSITION_SCALE));
     text.justification = 'left';
     text.fillColor = ScaleColor.value;
     text.content = "Masse volumique";
     text.rotation=-90;
 
-    var text = new paper.PointText(new paper.Point(20*mmtopx-45,arrayTickValues[ruler.stop]*mmtopx +60 + CORRECT_VERTICAL_POSITION_SCALE));
+    var text = new paper.PointText(new paper.Point(SCALE_ABSCISSA*mmtopx-45,arrayTickValues[ruler.stop]*mmtopx +60 + CORRECT_VERTICAL_POSITION_SCALE));
     text.justification = 'left';
     text.fillColor = ScaleColor.value;
     text.content = "g/l (05) 20ºC";
     text.rotation=-90;
 
-    var text = new paper.PointText(new paper.Point(20*mmtopx-35,arrayTickValues[ruler.stop]*mmtopx +60 + CORRECT_VERTICAL_POSITION_SCALE));
+    var text = new paper.PointText(new paper.Point(SCALE_ABSCISSA*mmtopx-35,arrayTickValues[ruler.stop]*mmtopx +60 + CORRECT_VERTICAL_POSITION_SCALE));
     text.justification = 'left';
     text.fillColor = ScaleColor.value;
     text.content = "Alcool probable";
     text.rotation=-90;
 
-    var text = new paper.PointText(new paper.Point(20*mmtopx-30+19,arrayTickValues[ruler.stop]*mmtopx +120 + CORRECT_VERTICAL_POSITION_SCALE));
+    var text = new paper.PointText(new paper.Point(SCALE_ABSCISSA*mmtopx-30+19,arrayTickValues[ruler.stop]*mmtopx +120 + CORRECT_VERTICAL_POSITION_SCALE));
     text.justification = 'center';
     text.fillColor = ScaleColor.value;
     text.content = "MUSTIMETRIE";
 
-    var text = new paper.PointText(new paper.Point(20*mmtopx-30+19,arrayTickValues[ruler.stop]*mmtopx +140 + CORRECT_VERTICAL_POSITION_SCALE));
+    var text = new paper.PointText(new paper.Point(SCALE_ABSCISSA*mmtopx-30+19,arrayTickValues[ruler.stop]*mmtopx +140 + CORRECT_VERTICAL_POSITION_SCALE));
     text.justification = 'center';
     text.fillColor = ScaleColor.value;
     text.content = "COMPANY";
 
-    var text = new paper.PointText(new paper.Point(20*mmtopx-30+19,arrayTickValues[ruler.stop]*mmtopx +160 + CORRECT_VERTICAL_POSITION_SCALE));
+    var text = new paper.PointText(new paper.Point(SCALE_ABSCISSA*mmtopx-30+19,arrayTickValues[ruler.stop]*mmtopx +160 + CORRECT_VERTICAL_POSITION_SCALE));
     text.justification = 'center';
     text.fillColor = ScaleColor.value;
     text.content = "NAME";
 
-    var text = new paper.PointText(new paper.Point(20*mmtopx+10,arrayTickValues[ruler.high]*mmtopx +70 + CORRECT_VERTICAL_POSITION_SCALE));
+    var text = new paper.PointText(new paper.Point(SCALE_ABSCISSA*mmtopx+10,arrayAlcoholValues[MIN_ALCOHOL_VALUE]*mmtopx -100 + CORRECT_VERTICAL_POSITION_SCALE));
     text.justification = 'center';
     text.fillColor = ScaleColor.value;
     text.content = "1683 grammes de sucre par hecto";
     text.rotation=-90;
 
-    var text = new paper.PointText(new paper.Point(20*mmtopx +20,arrayTickValues[ruler.high]*mmtopx+70 + CORRECT_VERTICAL_POSITION_SCALE));
+    var text = new paper.PointText(new paper.Point(SCALE_ABSCISSA*mmtopx +20,arrayAlcoholValues[MIN_ALCOHOL_VALUE]*mmtopx -100 + CORRECT_VERTICAL_POSITION_SCALE));
     text.justification = 'center';
     text.fillColor = ScaleColor.value;
     text.content = "produisent 1% d'alcool";
     text.rotation=-90;
     paper.view.draw();
 }
-
-var exportSvg = function(){
-    /* I referenced the excellent SVG export example here: http://paperjs.org/features/#svg-import-and-export
-    document.getElementById("svgexpbutton").onclick = 
-    function(){
-        exportWidth = document.getElementById("myCanvas").width
-        exportHeight = document.getElementById("myCanvas").height
-        viewBox ='viewBox="0 0 '+exportWidth+' '+exportHeight+'"'
-        dims = ' width= "'+exportWidth+'" height="'+exportHeight+' " '
-        var svgPrefix = '<svg x="0" y="0"'+dims+viewBox+' version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">';
-        // var svgPostfix = '</svg>';
-        var svg =   paper.project.exportSVG({ asString: true, size: { width: exportWidth, height: exportHeight } });
-
-        var elem = document.getElementById("svgexpdata");
-        elem.value = 'data:image/svg+xml;base64,' + btoa(svg);
-        //btoa Creates a base-64 encoded ASCII string from a "string" of binary data
-        document.getElementById("svgexpform").submit();
-};*/
+var checkIfSpecialValue = function(arrayListSpecialValues, arraySpecialValues, valueToBeChecked){
+    if (ruler.arrayListSpecialValues.includes(valueToBeChecked)){
+        color = ruler.arraySpecialValues[valueToBeChecked];
+    }
+    else {
+        color =ScaleColor.value;
+    }
+    return color;
 }
-
 $(document).ready(function(){ 
     console.log("\t ScaleGen Dujardin Salleron │╵│╵│╵│")
     //When document is loaded, call build once
@@ -326,5 +256,5 @@ $(document).ready(function(){
         build()
         debug()//prints all values to browser console
     });
-    exportSvg()
+    //exportSvg()
 });
