@@ -24,7 +24,10 @@
           [data-toggle="collapse"].collapsed .fa:before {
             content: "\f13a";
           }
-
+          #parameters_config, #scale_list{  
+              height: 300px !important;
+              overflow: scroll;
+          }​
         </style>
 
 
@@ -260,7 +263,7 @@
                         <div class="card-header">
                                 Liste des échelles
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" id="scale_list">
                           <table id="rulers_table" class="table table-striped">
                             <thead>
                               <tr>
@@ -279,7 +282,7 @@
                         <div class="card-header">
                            Générations précédentes
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" id="parameters_config">
                           <table id="parameters_table" class="table table-striped">
                             <thead>
                               <tr>

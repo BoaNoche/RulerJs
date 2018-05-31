@@ -107,11 +107,11 @@ function parameters() {
         // Put the object into storage
         d = new Date();
         localStorage.setItem('parametres_' + 
-            ("00" + d.getDate()).slice(-2)+ "/" + 
-            ("00" + (d.getMonth() + 1)).slice(-2) + "/" + 
-            d.getFullYear() + " - " + 
-            ("00" + d.getHours()).slice(-2) + ":" + 
-            ("00" + d.getMinutes()).slice(-2) + ":" + 
+            ("00" + d.getDate()).slice(-2)+
+            ("00" + (d.getMonth() + 1)).slice(-2) +
+            d.getFullYear() + " - " +
+            ("00" + d.getHours()).slice(-2) +
+            ("00" + d.getMinutes()).slice(-2) +
             ("00" + d.getSeconds()).slice(-2), JSON.stringify(this));
     };
 
@@ -341,10 +341,45 @@ function ruler(abcissa) {
     }
 
 }
-var load_parameters = function(){
+var load_parameters = function(parameters){
+        
+        parameter_list = window.localStorage.getItem(parameters);
 
+        parameter_list = JSON.parse(parameter_list);
+        console.log(parameter_list.low);        
+        
+        document.getElementById("rulerHigh").value=parameter_list.high
+        document.getElementById("rulerLow").value=parameter_list.low
+        document.getElementById("Increment").value=parameter_list.increment
+        document.getElementById("rulerStart").value=parameter_list.start
+        document.getElementById("rulerStop").value=parameter_list.stop
+        document.getElementById("line1length").value=parameter_list.line1length
+        document.getElementById("line1size").value=parameter_list.line1size
+        document.getElementById("line2length").value=parameter_list.line2length
+        document.getElementById("line2size").value=parameter_list.line2size
+        document.getElementById("line3length").value=parameter_list.line3length
+        document.getElementById("line3size").value=parameter_list.line3size
+        document.getElementById("lineAvalue").value=parameter_list.lineAvalue
+        document.getElementById("lineBvalue").value=parameter_list.lineBvalue
+        document.getElementById("lineCvalue").value=parameter_list.lineCvalue
+/*        displayVerticalLine = document.getElementById("displayVerticalLine").checked;
+        displayBorders = document.getElementById("displayBorders").checked;
+        
+        arrayListSpecialValues = [lineAvalue, lineBvalue, lineCvalue];
+        arraySpecialValues = [];
+        arraySpecialValues[lineAvalue] = lineAcolor.value;
+        arraySpecialValues[lineBvalue] = lineBcolor.value;
+        arraySpecialValues[lineCvalue] = lineCcolor.value;
+        exportButton= document.getElementById('export-button'=*/
+        var index, len;
+        resizeCanvas()
+        current_ruler.updateVariables();
+        for (index = 0, len = array_ruler.length; index < len; ++index) {
+            array_ruler[index].buildRuler();
+        }
+        paper.view.draw();
+        if(debug) {showDebug();}//prints all values to browser console
 
-    
     }; 
 
 var show_parameters_list = function(){
@@ -353,9 +388,6 @@ var show_parameters_list = function(){
         //console.log('retrievedObject: ', JSON.parse(loaded_parameters));
         var tableRef = document.getElementById('parameters_table').getElementsByTagName('tbody')[0];
 
-        // Insert a row in the table at the last row
-        var newRow   = tableRef.insertRow(tableRef.rows.length);
-
         var i = 0,
         oJson = {},
         sKey;
@@ -363,10 +395,12 @@ var show_parameters_list = function(){
             oJson[sKey] = window.localStorage.getItem(sKey);
             console.log(oJson);
             console.log(sKey);
+            // Insert a row in the table at the last row
+            var newRow   = tableRef.insertRow(tableRef.rows.length);
             var cell1 = newRow.insertCell(0);
             var cell2 = newRow.insertCell(1);
             cell1.innerHTML = sKey;
-            cell2.innerHTML = '<button class="btn" onclick="load_parameters("'+sKey+'")">Restaurer</a>'
+            cell2.innerHTML = '<button class="btn" onclick="load_parameters(\''+sKey+'\')">Restaurer</a>'
         }
     };
 $(document).ready(function(){
@@ -380,8 +414,21 @@ $(document).ready(function(){
     array_ruler.push(current_ruler);
     paper.view.draw();
     if(debug) {showDebug();}//prints all values to browser console
+    
+    var tableRef = document.getElementById('rulers_table').getElementsByTagName('tbody')[0];
 
-    $( "#rulerParameters" ).change(function() {
+    // Insert a row in the table at the last row
+    var newRow   = tableRef.insertRow(tableRef.rows.length);
+
+    // Insert a cell in the row at index 0
+
+    var cell1 = newRow.insertCell(0);
+    var cell2 = newRow.insertCell(1);
+    var cell3 = newRow.insertCell(2);       
+    cell1.innerHTML = "uniqueID";
+    cell2.innerHTML = parseInt(document.getElementById("rulerSize").value);
+    cell3.innerHTML = '<img src="img/glyphicons-17-bin.png" />'
+    $("#rulerParameters" ).change(function() {
         //anytime anything within the form is altered, call build again
         var index, len;
         resizeCanvas()
