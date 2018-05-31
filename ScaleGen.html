@@ -10,10 +10,23 @@
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+
         <!-- CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
         <link rel="stylesheet" href="css/page.css">
         <link rel="stylesheet" href="css/colorPicker.css" type="text/css" />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+        <style>
+          [data-toggle="collapse"] .fa:before {   
+            content: "\f139";
+          }
+
+          [data-toggle="collapse"].collapsed .fa:before {
+            content: "\f13a";
+          }
+
+        </style>
+
 
         <!-- Latest compiled and minified JavaScript -->
         <script type="text/javascript" src="js/paper-full.js"></script>
@@ -61,169 +74,186 @@
                                   <a href="#" data-toggle="tooltip" title="Taille de l'échelle souhaitée. En millimètres.">?</a>
                                 </div>
                             </div>
-                            <div class="form-group mb-2">
-                                <div class="input-group">
-                                  <div class="input-group-prepend">
-                                    <span class="input-group-text" id="title">Titre</span>
-                                  </div>
-                                  <input type="text" class="form-control cp4" placeholder="Mustimétrie" aria-label="title">
-                                  <a href="#" data-toggle="tooltip" title="Titre en bas de l'échelle">?</a>
-                                </div>
-                            </div>
-                            <div class="form-row mb-2">
-                                <div class="input-group col-md-6">
-                                  <div class="input-group-prepend">
-                                    <span class="input-group-text" >Haut</span>
-                                  </div>
-                                  <input type="text" id="rulerHigh" class="form-control" aria-label="title" value="990">
-                                </div>                  
-                                <div class="input-group col-md-6">
-                                  <div class="input-group-prepend">
-                                    <span class="input-group-text" >Bas</span>
-                                  </div>
-                                  <input type="text" id="rulerLow" class="form-control" aria-label="title" value="1130">
-                                </div>
-                            </div>
-                            <div class="form-row mb-2">
-                                <div class="input-group col-md-6">
-                                  <div class="input-group-prepend">
-                                    <span class="input-group-text">Intervalle de Graduation</span>
-                                  </div>
-                                  <input type="text" id="Increment" class="form-control" aria-label="title" value="1">
-                                </div>                  
-                                <div class="input-group col-md-3">
-                                  <div class="input-group-prepend">
-                                    <span class="input-group-text">de</span>
-                                  </div>
-                                  <input type="text" id="rulerStart" class="form-control" aria-label="title" value="980">
-                                </div>
-                                <div class="input-group col-md-3">
-                                  <div class="input-group-prepend">
-                                    <span class="input-group-text">à</span>
-                                  </div>
-                                  <input type="text" id="rulerStop" class="form-control" aria-label="title" value="1131">
-                                </div>
-                            </div>
-                            <div class="form-row mb-2">
-                                <div class="input-group col-md-6">
-                                  <div class="input-group-prepend">
-                                    <span class="input-group-text">Trait 1 - longueur</span>
-                                  </div>
-                                  <input type="text" id="line1length" class="form-control" aria-label="title" value="8">
-                                </div>                  
-                                <div class="input-group col-md-6">
-                                  <div class="input-group-prepend">
-                                    <span class="input-group-text">Epaisseur</span>
-                                  </div>
-                                  <input type="text" id="line1size" class="form-control" aria-label="title" value="1">
-                                </div>
-                            </div>
-                            <div class="form-row mb-2">
-                                <div class="input-group col-md-6">
-                                  <div class="input-group-prepend">
-                                    <span class="input-group-text">Trait 2- longueur</span>
-                                  </div>
-                                  <input type="text" id="line2length" class="form-control" aria-label="title" value="4">
-                                </div>                  
-                                <div class="input-group col-md-6">
-                                  <div class="input-group-prepend">
-                                    <span class="input-group-text">Epaisseur</span>
-                                  </div>
-                                  <input type="text" id="line2size" class="form-control" aria-label="title" value="1">
-                                </div>
-                            </div>
-                            <div class="form-row mb-2">
-                                <div class="input-group col-md-6">
-                                  <div class="input-group-prepend">
-                                    <span class="input-group-text">Trait 3 - longueur</span>
-                                  </div>
-                                  <input type="text" id="line3length" class="form-control" aria-label="title" value="2">
-                                </div>                  
-                                <div class="input-group col-md-6">
-                                  <div class="input-group-prepend">
-                                    <span class="input-group-text">Epaisseur</span>
-                                  </div>
-                                  <input type="text" id="line3size" class="form-control" aria-label="title" value="1">
-                                </div>
-                            </div>
-                            <h5>Trait spéciaux</h5>
-                            <div class="form-row mb-2">   
-                                    <div class="input-group col-md-6">
+                            <h5>Graduations - Texte<a class="btn collapsed" data-toggle="collapse" href="#collapseGeneral" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="fa"></i></a></h5>
+                              <div class="collapse in" id="collapseGeneral">
+                                <div class="card card-body">
+                                  <div class="form-group mb-2">
+                                      <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text">Trait A - valeur</span>
+                                          <span class="input-group-text" id="title">Titre</span>
                                         </div>
-                                            <input type="text" id="lineAvalue" class="form-control" aria-label="title" value="1000">
-                                    </div>
-                                    <div class="input-group col-md-6">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Couleur</span><input id="lineAcolor" type="text" value="#ff0000" />
-                                        </div>
-                                    </div>
-                                </div>
-                            <div class="form-row mb-2">   
-                                    <div class="input-group col-md-6">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Trait B - valeur</span>
-                                        </div>
-                                            <input type="text" id="lineBvalue" class="form-control" aria-label="title" value="">
-                                    </div>
-                                    <div class="input-group col-md-6">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Couleur</span><input id="lineBcolor" type="text" value="#ff0000" />
-                                        </div>
-                                    </div>
-                                </div>
-                            <div class="form-row mb-2">   
-                                    <div class="input-group col-md-6">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Trait C - valeur</span>
-                                        </div>
-                                            <input type="text" id="lineCvalue" class="form-control" aria-label="title" value="">
-                                    </div>
-                                    <div class="input-group col-md-6">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Couleur</span><input id="lineCcolor" type="text" value="#ff0000" />
-                                        </div>
-                                    </div>
-                            </div>
-                            <h5>Graduations - Texte</h5>
-                                <div class="form-row mb-2">
-                                    <div class="input-group col-md-6">
-                                      <div class="input-group-prepend">
-                                        <span class="input-group-text">Numéro abrégé</span>
+                                        <input type="text" class="form-control cp4" placeholder="Mustimétrie" aria-label="title">
+                                        <a href="#" data-toggle="tooltip" title="Titre en bas de l'échelle">?</a>
                                       </div>
-                                      <input type="text" class="form-control" aria-label="title" value="2">
+                                  </div>
+                                  <div class="form-row mb-2">
+                                      <div class="input-group col-md-6">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text" >Haut</span>
+                                        </div>
+                                        <input type="text" id="rulerHigh" class="form-control" aria-label="title" value="980">
+                                      </div>                  
+                                      <div class="input-group col-md-6">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text" >Bas</span>
+                                        </div>
+                                        <input type="text" id="rulerLow" class="form-control" aria-label="title" value="1130">
+                                      </div>
+                                  </div>
+                                  <div class="form-row mb-2">
+                                      <div class="input-group col-md-6">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">Intervalle de Graduation</span>
+                                        </div>
+                                        <input type="text" id="Increment" class="form-control" aria-label="title" value="1">
+                                      </div>                  
+                                      <div class="input-group col-md-3">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">de</span>
+                                        </div>
+                                        <input type="text" id="rulerStart" class="form-control" aria-label="title" value="980">
+                                      </div>
+                                      <div class="input-group col-md-3">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">à</span>
+                                        </div>
+                                        <input type="text" id="rulerStop" class="form-control" aria-label="title" value="1131">
+                                      </div>
+                                  </div>
+                                  <div class="form-row mb-2">
+                                      <div class="input-group col-md-6">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">Trait 1 - longueur</span>
+                                        </div>
+                                        <input type="text" id="line1length" class="form-control" aria-label="title" value="8">
+                                      </div>                  
+                                      <div class="input-group col-md-6">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">Epaisseur</span>
+                                        </div>
+                                        <input type="text" id="line1size" class="form-control" aria-label="title" value="1">
+                                      </div>
+                                  </div>
+                                  <div class="form-row mb-2">
+                                      <div class="input-group col-md-6">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">Trait 2- longueur</span>
+                                        </div>
+                                        <input type="text" id="line2length" class="form-control" aria-label="title" value="4">
+                                      </div>                  
+                                      <div class="input-group col-md-6">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">Epaisseur</span>
+                                        </div>
+                                        <input type="text" id="line2size" class="form-control" aria-label="title" value="1">
+                                      </div>
+                                  </div>
+                                  <div class="form-row mb-2">
+                                      <div class="input-group col-md-6">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">Trait 3 - longueur</span>
+                                        </div>
+                                        <input type="text" id="line3length" class="form-control" aria-label="title" value="2">
+                                      </div>                  
+                                      <div class="input-group col-md-6">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">Epaisseur</span>
+                                        </div>
+                                        <input type="text" id="line3size" class="form-control" aria-label="title" value="1">
+                                      </div>
+                                  </div>
+                              </div>
+                            </div>
+                            <h5>Trait spéciaux<a class="btn collapsed" data-toggle="collapse" href="#collapseSpecialDash" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="fa"></i></a></h5>
+                              <div class="collapse in" id="collapseSpecialDash">
+                                <div class="card card-body">
+                                  <div class="form-row mb-2">   
+                                          <div class="input-group col-md-6">
+                                              <div class="input-group-prepend">
+                                                  <span class="input-group-text">Trait A - valeur</span>
+                                              </div>
+                                                  <input type="text" id="lineAvalue" class="form-control" aria-label="title" value="1000">
+                                          </div>
+                                          <div class="input-group col-md-6">
+                                              <div class="input-group-prepend">
+                                                  <span class="input-group-text">Couleur</span><input id="lineAcolor" type="text" value="#ff0000" />
+                                              </div>
+                                          </div>
+                                      </div>
+                                  <div class="form-row mb-2">   
+                                          <div class="input-group col-md-6">
+                                              <div class="input-group-prepend">
+                                                  <span class="input-group-text">Trait B - valeur</span>
+                                              </div>
+                                                  <input type="text" id="lineBvalue" class="form-control" aria-label="title" value="">
+                                          </div>
+                                          <div class="input-group col-md-6">
+                                              <div class="input-group-prepend">
+                                                  <span class="input-group-text">Couleur</span><input id="lineBcolor" type="text" value="#ff0000" />
+                                              </div>
+                                          </div>
+                                      </div>
+                                  <div class="form-row mb-2">   
+                                          <div class="input-group col-md-6">
+                                              <div class="input-group-prepend">
+                                                  <span class="input-group-text">Trait C - valeur</span>
+                                              </div>
+                                                  <input type="text" id="lineCvalue" class="form-control" aria-label="title" value="">
+                                          </div>
+                                          <div class="input-group col-md-6">
+                                              <div class="input-group-prepend">
+                                                  <span class="input-group-text">Couleur</span><input id="lineCcolor" type="text" value="#ff0000" />
+                                              </div>
+                                          </div>
+                                  </div>
+                                </div>
+                              </div>
+                            <h5>Graduations - Texte<a class="btn collapsed" data-toggle="collapse" href="#collapseText" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="fa"></i></a></h5>
+                                <div class="collapse in" id="collapseText">
+                                    <div class="card card-body">
+                                      <div class="form-row mb-2">
+                                          <div class="input-group col-md-6">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text">Numéro abrégé</span>
+                                            </div>
+                                            <input type="text" class="form-control" aria-label="title" value="2">
+                                          </div>
+                                      </div>
                                     </div>
                                 </div>
-                            <h5>Mise en forme</h5>
-                                <div class="form-row mb-2">
-                                        <div class="input-group col-md-6">
-                                            <span class="input-group-text">Couleur de l'échelle</span><input id="ScaleColor" type="text" value="#000000" />
-                                        </div>
-                                </div>
-                                <div class="form-row mb-2">
-                                        <div class="input-group col-md-6">
-                                            <span class="input-group-text">Couleur de fond</span><input id="color6" type="text" value="#333399" />
-                                        </div>
-                                </div>
-                                <div class="mb-2">
-                                        <div class="col-md-12">
-                                          <input type="checkbox" id="displayVerticalLine" class="form-check-input" checked><label>Afficher le trait vertical</label><br/>
-                                          <input type="checkbox" id="displayBorders" class="form-check-input" checked><label>Afficher le cadre autour de l'échelle</label><br/>
-                                          <label>Commentaire</label><br/>
-                                          <textarea></textarea>
+                            <h5>Mise en forme<a class="btn collapsed" data-toggle="collapse" href="#collapseLayout" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="fa"></i></a></h5>
+                                <div class="collapse in" id="collapseLayout">
+                                  <div class="card card-body">
+                                    <div class="form-row mb-2">
+                                            <div class="input-group col-md-6">
+                                                <span class="input-group-text">Couleur de l'échelle</span><input id="ScaleColor" type="text" value="#000000" />
+                                            </div>
+                                    </div>
+                                    <div class="form-row mb-2">
+                                            <div class="input-group col-md-6">
+                                                <span class="input-group-text">Couleur de fond</span><input id="color6" type="text" value="#333399" />
+                                            </div>
+                                    </div>
+                                    <div class="mb-2">
+                                            <div class="col-md-12">
+                                              <input type="checkbox" id="displayVerticalLine" class="form-check-input" checked><label>Afficher le trait vertical</label><br/>
+                                              <input type="checkbox" id="displayBorders" class="form-check-input" checked><label>Afficher le cadre autour de l'échelle</label><br/>
+                                              <label>Commentaire</label><br/>
+                                              <textarea></textarea>
 
-                                        </div>
-                                        <button class="btn btn-primary" id="addToList">Ajouter</button>
-                                        <button class="btn btn-light" id="print">Imprimer (a Faire)</button>
-                                        <button class="btn btn-light" id="download-to-svg">Télécharger</button>
+                                            </div>
+                                    </div>
                                 </div>
-
-
+                          </div>
+                                            </form> 
+                                            <button class="btn btn-light" id="print">Imprimer (a Faire)</button>
+                                            <button class="btn btn-light" id="download_to_svg">Télécharger</button>
+                                            
+                            
                         </div>
                     </div>
-
-                  </form>
+<button class="btn btn-primary" id="add_scale">Ajouter</button>
+<button class="btn btn-primary" id="save_parameters">Sauvegarder les parametres</button>                
                 </div>
                 <div class="col-md-6">
                     <div class="card border mb-2">
@@ -231,7 +261,7 @@
                                 Liste des échelles
                         </div>
                         <div class="card-body">
-                          <table class="table table-striped">
+                          <table id="rulers_table" class="table table-striped">
                             <thead>
                               <tr>
                                 <th>Identifiant</th>
@@ -240,16 +270,6 @@
                               </tr>
                             </thead>
                             <tbody>
-                              <tr>
-                                <td>2018-00001</td>
-                                <td>120</td>
-                                <td><img src="img/glyphicons-17-bin.png" /></td>
-                              </tr>
-                              <tr>
-                                <td>2018-00002</td>
-                                <td>118</td>
-                                <td><img src="img/glyphicons-17-bin.png" /></td>
-                              </tr>
                             </tbody>
                           </table>
 
@@ -257,10 +277,10 @@
                     </div>
                     <div class="card border mb-2">
                         <div class="card-header">
-                                Générations précédentes
+                           Générations précédentes
                         </div>
                         <div class="card-body">
-                          <table class="table table-striped">
+                          <table id="parameters_table" class="table table-striped">
                             <thead>
                               <tr>
                                 <th>Date</th>
@@ -268,14 +288,6 @@
                               </tr>
                             </thead>
                             <tbody>
-                              <tr>
-                                <td>28/05/2018 - 15:05:24</td>
-                                <td>restaurer</td>
-                              </tr>
-                              <tr>
-                                <td>28/05/2018 - 15:06:23</td>
-                                <td>restaurer</td>
-                              </tr>
                             </tbody>
                           </table>
 
