@@ -106,7 +106,7 @@
                                   <div class="form-row mb-2">
                                       <div class="input-group col-md-6">
                                         <div class="input-group-prepend">
-                                          <span class="input-group-text">Intervalle de Graduation</span>
+                                          <span class="input-group-text">Intervalle</span>
                                         </div>
                                         <input type="text" id="Increment" class="form-control" aria-label="title" value="1">
                                       </div>                  
@@ -248,15 +248,13 @@
                                     </div>
                                 </div>
                           </div>
-                                            </form> 
-                                            <button class="btn btn-light" id="print">Imprimer (a Faire)</button>
-                                            <button class="btn btn-light" id="download_to_svg">Télécharger</button>
-                                            
-                            
+                        </form> 
                         </div>
                     </div>
-<button class="btn btn-primary" id="add_scale">Ajouter</button>
-<button class="btn btn-primary" id="save_parameters">Sauvegarder les parametres</button>                
+                <button class="btn btn-light" id="add_scale">Ajouter</button>
+                <button class="btn btn-light" id="download_to_svg">Télécharger</button>
+                <button class="btn btn-light" id="save_parameters">Sauvegarder les paramètres</button>
+                <button class="btn btn-primary" id="print" onclick="printDiv()">Imprimer</button>               
                 </div>
                 <div class="col-md-6">
                     <div class="card border mb-2">
@@ -299,7 +297,7 @@
                 </div>
             </div>
             <page size="A4">
-                <div class="printZone">
+                <div id="printingZone" class="printZone">
                     <div class="printBorders">
                         <canvas id="myCanvas" style="margin:1px;" resize></canvas>  
                     </div>
