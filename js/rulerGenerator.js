@@ -9,21 +9,21 @@ var array_ruler = [];
 $(document).ready(function(){
     display_parameters_list();
     //When document is loaded, call build once
-    resizeCanvas();
-    var ruler1 = new ruler(0,startX);
-    current_ruler=ruler1;
-    current_ruler.updateVariables();
-    current_ruler.buildRuler();
-    array_ruler.push(current_ruler);
-    console.log(array_ruler);
-    paper.view.draw();
-    if(debug) {displayDebug();}//prints all values to browser console
     
+    var ruler1 = new ruler(0,startX);
+    ruler1.updateVariables();
+    array_ruler.push(ruler1);
+    resizeCanvas();
+    drawAllrulers();
+
     arrayCells = ["uniqueID",parseInt(document.getElementById("rulerSize").value),'<a onclick="removeScale('+0+')"><img src="img/glyphicons-17-bin.png" /></a>']
     insertTableRow('rulers_table',"row0",arrayCells);
 
+    if(debug) {displayDebug();}//prints all values to browser console
     $("#rulerParameters" ).change(function() {
-        refreshCanvas(current_ruler);
+        resizeCanvas();
+        array_ruler[array_ruler.length-1].updateVariables();
+        drawAllrulers();
     });
 });
 
@@ -39,17 +39,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
     };
     document.getElementById("add_scale").onclick = function(){
 
-    resizeCanvas()
-    var new_ruler = new ruler(array_ruler.length,current_ruler.abscissa + new_scale_abscissa_addx);
+    resizeCanvas();  
+
+    var new_ruler = new ruler(array_ruler.length,array_ruler[array_ruler.length-1].abscissa + new_scale_abscissa_addx)
+    array_ruler.push(new_ruler);
     new_ruler.updateVariables();
-    
-    console.log(array_ruler);
-    len = array_ruler.push(new_ruler);
-    var index;
-    for (0; index < len; ++index) {
-        array_ruler[index].buildRuler();
-    };
-    paper.view.draw();
+
+    drawAllrulers();
 
     arrayCells = ["uniqueID",parseInt(document.getElementById("rulerSize").value),'<a onclick="removeScale('+(array_ruler.length-1)+')"><img src="img/glyphicons-17-bin.png" /></a>']
     insertTableRow('rulers_table',"row"+(document.getElementById("rulers_table").rows.length-1).toString(), arrayCells);
@@ -79,6 +75,14 @@ function deleteTableRow(tableID, rowID) {
     var i = document.getElementById(rowID).rowIndex;
     document.getElementById(tableID).deleteRow(i);
 };
+function drawAllrulers(){
+    len = array_ruler.length;
+    var index;
+    for (index=0; index < len   ; ++index) {
+        array_ruler[index].buildRuler();
+    };
+    paper.view.draw();
+}
 
 var printDiv = function() {
     //print only the canvas
@@ -155,20 +159,7 @@ var display_parameters_list = function(){
 var removeScale = function(id){
 
     array_ruler.pop(current_ruler)
-    refreshCanvas();
     deleteTableRow("rulers_table","row"+id)
-};
-
-var refreshCanvas = function(current_ruler){
-    //anytime anything within the form is altered, call build again
-    var index, len;
-    resizeCanvas()
-    current_ruler.updateVariables();
-    for (index = 0, len = array_ruler.length; index < len; ++index) {
-        array_ruler[index].buildRuler();
-    }
-    paper.view.draw();
-    if(debug) {displayDebug();}//prints all values to browser console
 };
 
 function parameters() {
@@ -212,9 +203,9 @@ function getFormatteddate(){
             ("00" + d.getSeconds()).slice(-2)
     return formattedDate;
 }
-function ruler(id, abcissa) {
+function ruler(id, abscissa) {
     this.id=id;
-    this.abscissa = abcissa;
+    this.abscissa = abscissa;
     this.MIN_ALCOHOL_VALUE = 3.5;
     this.MAX_ALCOHOL_VALUE = 18;
     this.ALCOHOL_INCREMENT = 0.5;
