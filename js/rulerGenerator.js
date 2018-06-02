@@ -3,27 +3,30 @@ var mmtopx = 3.779528;
 var CORRECT_VERTICAL_POSITION_SCALE = 100;
 var startX = 20;
 var new_scale_abscissa_addx = 40;
-var debug = false;
+var debug = true;
 var array_ruler = [];
 
 $(document).ready(function(){
-    display_parameters_list();
+    parameter = new saved_parameters()
+    parameter.display();
     //When document is loaded, call build once
     
+
     var ruler1 = new ruler(0,startX);
     ruler1.updateVariables();
     array_ruler.push(ruler1);
-    resizeCanvas();
     drawAllrulers();
 
-    arrayCells = ["uniqueID",parseInt(document.getElementById("rulerSize").value),'<a onclick="removeScale('+0+')"><img src="img/glyphicons-17-bin.png" /></a>']
-    insertTableRow('rulers_table',"row0",arrayCells);
+    scalelist = new scale_list()
+    scalelist.display();
 
     if(debug) {displayDebug();}//prints all values to browser console
     $("#rulerParameters" ).change(function() {
-        resizeCanvas();
         array_ruler[array_ruler.length-1].updateVariables();
         drawAllrulers();
+
+        scalelist = new scale_list()
+        scalelist.display();
     });
 });
 
@@ -39,19 +42,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
     };
     document.getElementById("add_scale").onclick = function(){
 
-    resizeCanvas();  
-
     var new_ruler = new ruler(array_ruler.length,array_ruler[array_ruler.length-1].abscissa + new_scale_abscissa_addx)
     array_ruler.push(new_ruler);
     new_ruler.updateVariables();
 
     drawAllrulers();
-
-    arrayCells = ["uniqueID",parseInt(document.getElementById("rulerSize").value),'<a onclick="removeScale('+(array_ruler.length-1)+')"><img src="img/glyphicons-17-bin.png" /></a>']
-    insertTableRow('rulers_table',"row"+(document.getElementById("rulers_table").rows.length-1).toString(), arrayCells);
+    
+    scalelist = new scale_list()
+    scalelist.display();
+    console.log(array_ruler);
     }
     document.getElementById("save_parameters").onclick = function(){
-        rule_parameters = new parameters();
+        rule_parameters = new saved_parameters();
         rule_parameters.save();
     };
 });
@@ -70,15 +72,12 @@ var insertTableRow = function(tableID, rowId, arrayCells){
     }
 };
 
-function deleteTableRow(tableID, rowID) {
-    //delete a row in a table.
-    var i = document.getElementById(rowID).rowIndex;
-    document.getElementById(tableID).deleteRow(i);
-};
 function drawAllrulers(){
+    resizeCanvas();
     len = array_ruler.length;
     var index;
     for (index=0; index < len   ; ++index) {
+        array_ruler[index].abscissa = startX + index*new_scale_abscissa_addx;
         array_ruler[index].buildRuler();
     };
     paper.view.draw();
@@ -102,15 +101,20 @@ var resizeCanvas = function(){
     var canvas = document.getElementById('myCanvas');
     // Create an empty project and a view for the canvas:
     paper.setup(canvas);
-    document.getElementById("myCanvas").width = 210*mmtopx
-    document.getElementById("myCanvas").height = 277*mmtopx
+    canvas.width = 210*mmtopx;
+    canvas.height = 297*mmtopx;
+    canvas.style.width  = 210*mmtopx;
+    canvas.style.height = 297*mmtopx;
 };
 
 var displayDebug = function(){
     //print the debug infos in console
     console.info("--All the variables---")
-    console.info(ruler);
+    console.info(array_ruler);
+
 };
+
+
 
 var load_parameters = function(parameters){        
         parameter_list = window.localStorage.getItem(parameters);
@@ -135,34 +139,47 @@ var load_parameters = function(parameters){
         document.getElementById("lineBcolor").value = parameter_list.lineBcolor;
         document.getElementById("lineCcolor").value = parameter_list.lineCcolor;
         
-        resizeCanvas()
-        current_ruler.updateVariables();
-        
-        var index, len;
-        for (index = 0, len = array_ruler.length; index < len; ++index) {
-            array_ruler[index].buildRuler();
-        }
+        drawAllrulers();
         paper.view.draw();
         if(debug) {displayDebug();}//prints all values to browser console
-}; 
-
-var display_parameters_list = function(){
-        var i = 0,
-        oJson = {},
-        sKey;
-        for (; sKey = window.localStorage.key(i); i++) {
-            oJson[sKey] = window.localStorage.getItem(sKey);
-            arrayCells = [sKey,'<button class="btn" onclick="load_parameters(\''+sKey+'\')">Restaurer</a>']
-            insertTableRow('parameters_table',"row"+i.toString(),arrayCells);
-        }
 };
+
+
 var removeScale = function(id){
+    var index = $.inArray(id, array_ruler);
+    array_ruler.splice(index, 1);
+    drawAllrulers();
 
-    array_ruler.pop(current_ruler)
-    deleteTableRow("rulers_table","row"+id)
+    scalelist = new scale_list()
+    scalelist.display();
 };
 
-function parameters() {
+function getFormatteddate(){
+    d = new Date();
+    formattedDate = ("00" + d.getDay()).slice(-2)+
+            ("00" + (d.getMonth() + 1)).slice(-2) +
+            d.getFullYear() + " - " +
+            ("00" + d.getHours()).slice(-2) +
+            ("00" + d.getMinutes()).slice(-2) +
+            ("00" + d.getSeconds()).slice(-2)
+    return formattedDate;
+}
+function scale_list() {
+    this.display = function(){
+        $("#rulers_table tbody tr").remove(); 
+
+        var index, len;
+        for (index = 0, len = array_ruler.length; index < len; ++index) {
+            arrayCells = ["uniqueID"+index,array_ruler[index].size,'<a onclick="removeScale('+array_ruler[index].id+')"><img src="img/glyphicons-17-bin.png" /></a>']
+            insertTableRow('rulers_table',"row"+index, arrayCells);
+        }
+    }
+}
+
+
+
+
+function saved_parameters() {
     this.save = function(){
         this.size = parseInt(document.getElementById("rulerSize").value);
         this.high = parseInt(document.getElementById("rulerHigh").value);
@@ -191,18 +208,21 @@ function parameters() {
         // Put the object into storage
         localStorage.setItem('parametres_' + getFormatteddate()
             , JSON.stringify(this));
-        show_parameters_list();
+        this.display();
+    };
+
+    this.display = function(){
+        var i = 0,
+        oJson = {},
+        sKey;
+        for (; sKey = window.localStorage.key(i); i++) {
+            oJson[sKey] = window.localStorage.getItem(sKey);
+            arrayCells = [sKey,'<button class="btn" onclick="load_parameters(\''+sKey+'\')">Restaurer</a>']
+            insertTableRow('parameters_table',"row"+i.toString(),arrayCells);
+        }
     };
 };
-function getFormatteddate(){
-    formattedDate = ("00" + d.getDay()).slice(-2)+
-            ("00" + (d.getMonth() + 1)).slice(-2) +
-            d.getFullYear() + " - " +
-            ("00" + d.getHours()).slice(-2) +
-            ("00" + d.getMinutes()).slice(-2) +
-            ("00" + d.getSeconds()).slice(-2)
-    return formattedDate;
-}
+
 function ruler(id, abscissa) {
     this.id=id;
     this.abscissa = abscissa;
@@ -236,6 +256,7 @@ function ruler(id, abscissa) {
         this.arraySpecialValues[this.lineBvalue] = lineBcolor.value;
         this.arraySpecialValues[this.lineCvalue] = lineCcolor.value;
         this.exportButton= document.getElementById('export-button');
+        this.scaleColor = ScaleColor.value;
     };
 
     this.buildRuler = function() {
@@ -296,14 +317,14 @@ function ruler(id, abscissa) {
     this.displayVerticalline = function(){
         //displays the vertical line of a ruler
         if(this.VerticalLine){
-            displayLine(this.abscissa*mmtopx, CORRECT_VERTICAL_POSITION_SCALE,this.abscissa*mmtopx, this.arrayTickValues[this.low]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE,"1",ScaleColor.value);
+            displayLine(this.abscissa*mmtopx, CORRECT_VERTICAL_POSITION_SCALE,this.abscissa*mmtopx, this.arrayTickValues[this.low]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE,"1",this.scaleColor);
         }
     };
 
     this.displayBorders = function(){
         //displays the borders of a ruler
         if(this.Borders){
-            var rectangle = new paper.Rectangle(new paper.Point(0, 0), new paper.Size((this.abscissa+20)*mmtopx, 200*mmtopx));
+            var rectangle = new paper.Rectangle(new paper.Point((this.abscissa-20)*mmtopx, 0), new paper.Size(40*mmtopx, (this.arrayTickValues[this.low]+80)*mmtopx));
             var path = new paper.Path.Rectangle(rectangle);
             path.strokeColor = 'black';
             }
@@ -320,8 +341,8 @@ function ruler(id, abscissa) {
                         this.abscissa*mmtopx,
                         this.arrayAlcoholValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE,
                         "1",
-                        ScaleColor.value);
-                    displayText(i,this.abscissa*mmtopx+7,this.arrayAlcoholValues[i]*mmtopx -5 + CORRECT_VERTICAL_POSITION_SCALE,"left",0,ScaleColor.value);
+                        this.scaleColor);
+                    displayText(i,this.abscissa*mmtopx+7,this.arrayAlcoholValues[i]*mmtopx -5 + CORRECT_VERTICAL_POSITION_SCALE,"left",0,this.scaleColor);
                 }
                 else{
                     displayLine(this.abscissa*mmtopx+this.line3length*mmtopx,
@@ -329,7 +350,7 @@ function ruler(id, abscissa) {
                         this.abscissa*mmtopx,
                         this.arrayAlcoholValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE,
                         "1",
-                        ScaleColor.value);
+                        this.scaleColor);
                 }
             }
     };
@@ -346,7 +367,7 @@ function ruler(id, abscissa) {
                         this.arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE,
                         this.line1size,
                         this.displaySpecialValue(this, this.arrayListSpecialValues, this.arraySpecialValues, i));
-                    displayText(i,this.abscissa*mmtopx-30+19,this.arrayTickValues[i]*mmtopx -2 + CORRECT_VERTICAL_POSITION_SCALE,"right",0,ScaleColor.value);
+                    displayText(i,this.abscissa*mmtopx-30+19,this.arrayTickValues[i]*mmtopx -2 + CORRECT_VERTICAL_POSITION_SCALE,"right",0,this.scaleColor);
                 }
                 else if(i%5==0){
                     displayLine(this.abscissa*mmtopx-this.line2length*mmtopx,
@@ -373,20 +394,20 @@ function ruler(id, abscissa) {
             color = ruler.arraySpecialValues[valueToBeChecked];
         }
         else {
-            color =ScaleColor.value;
+            color =this.scaleColor;
         }
         return color;
     };
 
     this.displayAlltexts = function() {
         //Displays fixed texts for a rule.
-        displayText("Masse volumique",this.abscissa*mmtopx-70,this.arrayTickValues[this.low]*mmtopx +60 + CORRECT_VERTICAL_POSITION_SCALE,"left",-90,ScaleColor.value);
-        displayText("g/l (05) 20ºC",this.abscissa*mmtopx-45,this.arrayTickValues[this.low]*mmtopx +60 + CORRECT_VERTICAL_POSITION_SCALE,"left",-90,ScaleColor.value);
-        displayText("Alcool probable",this.abscissa*mmtopx-35,this.arrayTickValues[this.low]*mmtopx +60 + CORRECT_VERTICAL_POSITION_SCALE,"left",-90,ScaleColor.value);
-        displayText("MUSTIMETRIE",this.abscissa*mmtopx-11,this.arrayTickValues[this.low]*mmtopx +120 + CORRECT_VERTICAL_POSITION_SCALE,"center",0,ScaleColor.value);
-        displayText("COMPANY",this.abscissa*mmtopx-11,this.arrayTickValues[this.low]*mmtopx +140 + CORRECT_VERTICAL_POSITION_SCALE,"center",0,ScaleColor.value);
-        displayText("NAME",this.abscissa*mmtopx-11,this.arrayTickValues[this.low]*mmtopx +160 + CORRECT_VERTICAL_POSITION_SCALE,"center",0,ScaleColor.value);
-        displayText("1683 grammes de sucre par hecto",this.abscissa*mmtopx+10,this.arrayAlcoholValues[this.MIN_ALCOHOL_VALUE]*mmtopx -100 + CORRECT_VERTICAL_POSITION_SCALE,"center",-90,ScaleColor.value);
-        displayText("produisent 1% d'alcool",this.abscissa*mmtopx +20,this.arrayAlcoholValues[this.MIN_ALCOHOL_VALUE]*mmtopx -100 + CORRECT_VERTICAL_POSITION_SCALE,"center",-90,ScaleColor.value);
+        displayText("Masse volumique",this.abscissa*mmtopx-70,this.arrayTickValues[this.low]*mmtopx +60 + CORRECT_VERTICAL_POSITION_SCALE,"left",-90,this.scaleColor);
+        displayText("g/l (05) 20ºC",this.abscissa*mmtopx-45,this.arrayTickValues[this.low]*mmtopx +60 + CORRECT_VERTICAL_POSITION_SCALE,"left",-90,this.scaleColor);
+        displayText("Alcool probable",this.abscissa*mmtopx-35,this.arrayTickValues[this.low]*mmtopx +60 + CORRECT_VERTICAL_POSITION_SCALE,"left",-90,this.scaleColor);
+        displayText("MUSTIMETRIE",this.abscissa*mmtopx-11,this.arrayTickValues[this.low]*mmtopx +120 + CORRECT_VERTICAL_POSITION_SCALE,"center",0,this.scaleColor);
+        displayText("COMPANY",this.abscissa*mmtopx-11,this.arrayTickValues[this.low]*mmtopx +140 + CORRECT_VERTICAL_POSITION_SCALE,"center",0,this.scaleColor);
+        displayText("NAME",this.abscissa*mmtopx-11,this.arrayTickValues[this.low]*mmtopx +160 + CORRECT_VERTICAL_POSITION_SCALE,"center",0,this.scaleColor);
+        displayText("1683 grammes de sucre par hecto",this.abscissa*mmtopx+10,this.arrayAlcoholValues[this.MIN_ALCOHOL_VALUE]*mmtopx -100 + CORRECT_VERTICAL_POSITION_SCALE,"center",-90,this.scaleColor);
+        displayText("produisent 1% d'alcool",this.abscissa*mmtopx +20,this.arrayAlcoholValues[this.MIN_ALCOHOL_VALUE]*mmtopx -100 + CORRECT_VERTICAL_POSITION_SCALE,"center",-90,this.scaleColor);
     };
 };
