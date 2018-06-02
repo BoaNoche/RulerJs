@@ -7,32 +7,25 @@ var debug = true;
 var array_ruler = [];
 
 $(document).ready(function(){
-    parameter = new saved_parameters()
+    //puild the parameter list
+    var parameter = new parameters()
     parameter.display();
-    //When document is loaded, call build once
-    
-
+    //build the rulers
     var ruler1 = new ruler(0,startX);
     ruler1.updateVariables();
     array_ruler.push(ruler1);
     drawAllrulers();
-
-    scalelist = new scale_list()
+    //build the ruler list
+    var scalelist = new scale_list()
     scalelist.display();
 
     if(debug) {displayDebug();}//prints all values to browser console
-    $("#rulerParameters" ).change(function() {
-        array_ruler[array_ruler.length-1].updateVariables();
-        drawAllrulers();
-
-        scalelist = new scale_list()
-        scalelist.display();
-    });
 });
 
 document.addEventListener("DOMContentLoaded", function(event) {
 
     document.getElementById("download_to_svg").onclick = function(){
+    //download SVG file button
     var fileName = "Scale_" + getFormatteddate() + ".svg"
     var url = "data:image/svg+xml;utf8," + encodeURIComponent(paper.project.exportSVG({asString:true}));
     var link = document.createElement("a");
@@ -40,20 +33,30 @@ document.addEventListener("DOMContentLoaded", function(event) {
     link.href = url;
     link.click();
     };
-    document.getElementById("add_scale").onclick = function(){
 
+    document.getElementById("rulerParameters").onchange = function(){
+    array_ruler[array_ruler.length-1].updateVariables();
+    drawAllrulers();
+
+    scalelist = new scale_list()
+    scalelist.display();
+    };
+
+    document.getElementById("add_scale").onclick = function(){
+    //Add a new scale button
     var new_ruler = new ruler(array_ruler.length,array_ruler[array_ruler.length-1].abscissa + new_scale_abscissa_addx)
     array_ruler.push(new_ruler);
     new_ruler.updateVariables();
-
     drawAllrulers();
     
+    //Update Scale list
     scalelist = new scale_list()
     scalelist.display();
-    console.log(array_ruler);
     }
+    
     document.getElementById("save_parameters").onclick = function(){
-        rule_parameters = new saved_parameters();
+        //Update rule parameters
+        rule_parameters = new parameters();
         rule_parameters.save();
     };
 });
@@ -73,6 +76,7 @@ var insertTableRow = function(tableID, rowId, arrayCells){
 };
 
 function drawAllrulers(){
+    //update all abscissas origin and re-displays all the rulers.
     resizeCanvas();
     len = array_ruler.length;
     var index;
@@ -179,7 +183,7 @@ function scale_list() {
 
 
 
-function saved_parameters() {
+function parameters() {
     this.save = function(){
         this.size = parseInt(document.getElementById("rulerSize").value);
         this.high = parseInt(document.getElementById("rulerHigh").value);
@@ -298,7 +302,7 @@ function ruler(id, abscissa) {
         if(debug) {console.log(this.arrayAlcoholValues)}; 
     };
 
-    var displayText = function(message, x, y, justification, rotation, color){
+    this.displayText = function(message, x, y, justification, rotation, color){
         //displays a text using paperjs
         var text = new paper.PointText(new paper.Point(x,y));
         text.content = message;
@@ -307,7 +311,7 @@ function ruler(id, abscissa) {
         text.rotation=rotation;
     };
 
-    var displayLine = function(xA, yA, xB, yB, thickness, color){
+    this displayLine = function(xA, yA, xB, yB, thickness, color){
         //displays a line using paperjs
         var tick = new paper.Path.Line([xA,yA],[xB,yB]);//actual line instance
         tick.strokeColor = color;//color of ruler line
@@ -317,7 +321,7 @@ function ruler(id, abscissa) {
     this.displayVerticalline = function(){
         //displays the vertical line of a ruler
         if(this.VerticalLine){
-            displayLine(this.abscissa*mmtopx, CORRECT_VERTICAL_POSITION_SCALE,this.abscissa*mmtopx, this.arrayTickValues[this.low]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE,"1",this.scaleColor);
+            this.displayLine(this.abscissa*mmtopx, CORRECT_VERTICAL_POSITION_SCALE,this.abscissa*mmtopx, this.arrayTickValues[this.low]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE,"1",this.scaleColor);
         }
     };
 
@@ -336,16 +340,16 @@ function ruler(id, abscissa) {
         for (i = this.MIN_ALCOHOL_VALUE; i <= this.MAX_ALCOHOL_VALUE; i+=this.ALCOHOL_INCREMENT) {
                 j+=5;
                 if(i%1==0){
-                    displayLine(this.abscissa*mmtopx+this.line2length*mmtopx,
+                    this.displayLine(this.abscissa*mmtopx+this.line2length*mmtopx,
                         this.arrayAlcoholValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE,
                         this.abscissa*mmtopx,
                         this.arrayAlcoholValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE,
                         "1",
                         this.scaleColor);
-                    displayText(i,this.abscissa*mmtopx+7,this.arrayAlcoholValues[i]*mmtopx -5 + CORRECT_VERTICAL_POSITION_SCALE,"left",0,this.scaleColor);
+                    this.displayText(i,this.abscissa*mmtopx+7,this.arrayAlcoholValues[i]*mmtopx -5 + CORRECT_VERTICAL_POSITION_SCALE,"left",0,this.scaleColor);
                 }
                 else{
-                    displayLine(this.abscissa*mmtopx+this.line3length*mmtopx,
+                    this.displayLine(this.abscissa*mmtopx+this.line3length*mmtopx,
                         this.arrayAlcoholValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE,
                         this.abscissa*mmtopx,
                         this.arrayAlcoholValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE,
@@ -361,16 +365,16 @@ function ruler(id, abscissa) {
         for (i = this.high; i <= this.low; i++) {
                 j+=5;
                 if(i%10==0.0 && i>=this.high){
-                    displayLine(this.abscissa*mmtopx-this.line1length*mmtopx,
+                    this.displayLine(this.abscissa*mmtopx-this.line1length*mmtopx,
                         this.arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE,
                         this.abscissa*mmtopx, 
                         this.arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE,
                         this.line1size,
                         this.displaySpecialValue(this, this.arrayListSpecialValues, this.arraySpecialValues, i));
-                    displayText(i,this.abscissa*mmtopx-30+19,this.arrayTickValues[i]*mmtopx -2 + CORRECT_VERTICAL_POSITION_SCALE,"right",0,this.scaleColor);
+                    this.displayText(i,this.abscissa*mmtopx-30+19,this.arrayTickValues[i]*mmtopx -2 + CORRECT_VERTICAL_POSITION_SCALE,"right",0,this.scaleColor);
                 }
                 else if(i%5==0){
-                    displayLine(this.abscissa*mmtopx-this.line2length*mmtopx,
+                    this.displayLine(this.abscissa*mmtopx-this.line2length*mmtopx,
                         this.arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE,
                         this.abscissa*mmtopx,
                         this.arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE,
@@ -378,7 +382,7 @@ function ruler(id, abscissa) {
                         this.displaySpecialValue(this, this.arrayListSpecialValues, this.arraySpecialValues, i));
                 }
                 else{
-                    displayLine(this.abscissa*mmtopx-this.line3length*mmtopx,
+                    this.displayLine(this.abscissa*mmtopx-this.line3length*mmtopx,
                         this.arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE,
                         this.abscissa*mmtopx,
                         this.arrayTickValues[i]*mmtopx + CORRECT_VERTICAL_POSITION_SCALE,
@@ -401,13 +405,13 @@ function ruler(id, abscissa) {
 
     this.displayAlltexts = function() {
         //Displays fixed texts for a rule.
-        displayText("Masse volumique",this.abscissa*mmtopx-70,this.arrayTickValues[this.low]*mmtopx +60 + CORRECT_VERTICAL_POSITION_SCALE,"left",-90,this.scaleColor);
-        displayText("g/l (05) 20ºC",this.abscissa*mmtopx-45,this.arrayTickValues[this.low]*mmtopx +60 + CORRECT_VERTICAL_POSITION_SCALE,"left",-90,this.scaleColor);
-        displayText("Alcool probable",this.abscissa*mmtopx-35,this.arrayTickValues[this.low]*mmtopx +60 + CORRECT_VERTICAL_POSITION_SCALE,"left",-90,this.scaleColor);
-        displayText("MUSTIMETRIE",this.abscissa*mmtopx-11,this.arrayTickValues[this.low]*mmtopx +120 + CORRECT_VERTICAL_POSITION_SCALE,"center",0,this.scaleColor);
-        displayText("COMPANY",this.abscissa*mmtopx-11,this.arrayTickValues[this.low]*mmtopx +140 + CORRECT_VERTICAL_POSITION_SCALE,"center",0,this.scaleColor);
-        displayText("NAME",this.abscissa*mmtopx-11,this.arrayTickValues[this.low]*mmtopx +160 + CORRECT_VERTICAL_POSITION_SCALE,"center",0,this.scaleColor);
-        displayText("1683 grammes de sucre par hecto",this.abscissa*mmtopx+10,this.arrayAlcoholValues[this.MIN_ALCOHOL_VALUE]*mmtopx -100 + CORRECT_VERTICAL_POSITION_SCALE,"center",-90,this.scaleColor);
-        displayText("produisent 1% d'alcool",this.abscissa*mmtopx +20,this.arrayAlcoholValues[this.MIN_ALCOHOL_VALUE]*mmtopx -100 + CORRECT_VERTICAL_POSITION_SCALE,"center",-90,this.scaleColor);
+        this.displayText("Masse volumique",this.abscissa*mmtopx-70,this.arrayTickValues[this.low]*mmtopx +60 + CORRECT_VERTICAL_POSITION_SCALE,"left",-90,this.scaleColor);
+        this.displayText("g/l (05) 20ºC",this.abscissa*mmtopx-45,this.arrayTickValues[this.low]*mmtopx +60 + CORRECT_VERTICAL_POSITION_SCALE,"left",-90,this.scaleColor);
+        this.displayText("Alcool probable",this.abscissa*mmtopx-35,this.arrayTickValues[this.low]*mmtopx +60 + CORRECT_VERTICAL_POSITION_SCALE,"left",-90,this.scaleColor);
+        this.displayText("MUSTIMETRIE",this.abscissa*mmtopx-11,this.arrayTickValues[this.low]*mmtopx +120 + CORRECT_VERTICAL_POSITION_SCALE,"center",0,this.scaleColor);
+        this.displayText("COMPANY",this.abscissa*mmtopx-11,this.arrayTickValues[this.low]*mmtopx +140 + CORRECT_VERTICAL_POSITION_SCALE,"center",0,this.scaleColor);
+        this.displayText("NAME",this.abscissa*mmtopx-11,this.arrayTickValues[this.low]*mmtopx +160 + CORRECT_VERTICAL_POSITION_SCALE,"center",0,this.scaleColor);
+        this.displayText("1683 grammes de sucre par hecto",this.abscissa*mmtopx+10,this.arrayAlcoholValues[this.MIN_ALCOHOL_VALUE]*mmtopx -100 + CORRECT_VERTICAL_POSITION_SCALE,"center",-90,this.scaleColor);
+        this.displayText("produisent 1% d'alcool",this.abscissa*mmtopx +20,this.arrayAlcoholValues[this.MIN_ALCOHOL_VALUE]*mmtopx -100 + CORRECT_VERTICAL_POSITION_SCALE,"center",-90,this.scaleColor);
     };
 };
