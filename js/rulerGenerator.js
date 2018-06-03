@@ -82,7 +82,10 @@ var insertTableRow = function(tableID, rowId, arrayCells) {
 
 function drawAllrulers() {
     //update all abscissas origin and re-displays all the rulers.
-    resizeCanvas();
+    // Get a reference to the canvas object
+    var canvas = document.getElementById("myCanvas");
+    // Create an empty project and a view for the canvas
+    paper.setup(canvas);
     len = array_ruler.length;
     var index;
     for (index = 0; index < len; index+=1) {
@@ -93,37 +96,14 @@ function drawAllrulers() {
 }
 
 var printDiv = function() {
-    //print only the canvas
-    var printContents = document.getElementById("printingZone").innerHTML;
-    console.log(printContents);
-    var originalContents = document.body.innerHTML;
-
-    document.body.innerHTML = printContents;
-
     window.print();
-
-    document.body.innerHTML = originalContents;
-};
-
-var resizeCanvas = function() {
-    // Get a reference to the canvas object
-    var canvas = document.getElementById("myCanvas");
-    // Create an empty project and a view for the canvas:
-    paper.setup(canvas);
-    canvas.width = 210 * mmtopx;
-    canvas.height = 297 * mmtopx;
-    canvas.style.width = 210 * mmtopx;
-    canvas.style.height = 297 * mmtopx;
 };
 
 var displayDebug = function() {
     //print the debug infos in console
     console.info("--All the variables---");
     console.info(array_ruler);
-
 };
-
-
 
 var load_parameters = function(parameters) {
     parameter_list = window.localStorage.getItem(parameters);
@@ -230,6 +210,10 @@ function parameters() {
             insertTableRow("parameters_table", "row" + i.toString(), arrayCells);
         }
     };
+    this.load = function() {
+
+
+    }
 };
 
 function ruler(id, abscissa) {
@@ -420,8 +404,8 @@ function ruler(id, abscissa) {
         this.displayText("g/l (05) 20ºC", this.abscissa * mmtopx - 45, this.arrayTickValues[this.low] * mmtopx + 60 + CORRECT_VERTICAL_POSITION_SCALE, "left", -90, this.scaleColor);
         this.displayText("Alcool probable", this.abscissa * mmtopx - 35, this.arrayTickValues[this.low] * mmtopx + 60 + CORRECT_VERTICAL_POSITION_SCALE, "left", -90, this.scaleColor);
         this.displayText("MUSTIMETRIE", this.abscissa * mmtopx - 11, this.arrayTickValues[this.low] * mmtopx + 120 + CORRECT_VERTICAL_POSITION_SCALE, "center", 0, this.scaleColor);
-        this.displayText("COMPANY", this.abscissa * mmtopx - 11, this.arrayTickValues[this.low] * mmtopx + 140 + CORRECT_VERTICAL_POSITION_SCALE, "center", 0, this.scaleColor);
-        this.displayText("NAME", this.abscissa * mmtopx - 11, this.arrayTickValues[this.low] * mmtopx + 160 + CORRECT_VERTICAL_POSITION_SCALE, "center", 0, this.scaleColor);
+        this.displayText("DUJARDIN", this.abscissa * mmtopx - 11, this.arrayTickValues[this.low] * mmtopx + 140 + CORRECT_VERTICAL_POSITION_SCALE, "center", 0, this.scaleColor);
+        this.displayText("SALLERON", this.abscissa * mmtopx - 11, this.arrayTickValues[this.low] * mmtopx + 160 + CORRECT_VERTICAL_POSITION_SCALE, "center", 0, this.scaleColor);
         this.displayText("1683 grammes de sucre par hecto", this.abscissa * mmtopx + 10, this.arrayAlcoholValues[this.MIN_ALCOHOL_VALUE] * mmtopx - 100 + CORRECT_VERTICAL_POSITION_SCALE, "center", -90, this.scaleColor);
         this.displayText("produisent 1% d'alcool", this.abscissa * mmtopx + 20, this.arrayAlcoholValues[this.MIN_ALCOHOL_VALUE] * mmtopx - 100 + CORRECT_VERTICAL_POSITION_SCALE, "center", -90, this.scaleColor);
     };

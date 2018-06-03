@@ -1,0 +1,30 @@
+@media print
+{    
+    body {
+        background: #000000; 
+    }
+    page {
+        background: #000000;
+        margin: 0;
+    }
+    page[size="A4"] {  
+        width: 100%;
+        height: 100%; 
+    }
+
+    #NoPrint{
+        display: none !important;
+    }
+    footer {
+        page-break-after: always;
+    }
+    .printZone {
+        padding : none ;
+        border : none;
+        height : 100%;
+    }
+    .printBorders {
+        border : none;
+        height : 100;
+    }
+}

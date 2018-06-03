@@ -1,13 +1,17 @@
-/*.cp4 {
-  content: "";
-  position: absolute;
-  right: 5%;
-  background: url(http://cdn.flaticon.com/png/256/64494.png);
-  background-size: 30px 30px;
-  top: 10px;
-}*/
-body {
-  background: rgb(204,204,204); 
+html, body {
+    margin: 0;
+    height: 100%;
+    background: rgb(204,204,204)
+}
+
+/* Scale canvas with resize attribute to full size */
+canvas[resize] {
+    width: 100%;
+    height: 100%;
+}
+
+canvas{
+    display:block;
 }
 page {
   background: white;
@@ -15,11 +19,11 @@ page {
   margin: 0 auto;
   box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
 }
-page[size="A4"] {  
+/*page[size="A4"] {  
   width: 21cm;
   height: 29.7cm; 
-}
-page[size="A4"][layout="portrait"] {
+}*/
+/*page[size="A4"][layout="portrait"] {
   width: 29.7cm;
   height: 21cm;  
 }
@@ -39,17 +43,13 @@ page[size="A5"][layout="portrait"] {
   width: 21cm;
   height: 14.8cm;  
 }
-@media print {
-  body, page {
-    margin: 0;
-    box-shadow: 0;
-  }
-}
-
+*/
 .printZone {
   padding : 1cm ;
+  height : 100%;
   
 }
 .printBorders {
   border : dotted 1px black;
+  height : 100;
 }
