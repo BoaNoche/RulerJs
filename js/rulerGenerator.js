@@ -1,9 +1,9 @@
 //coeff to multiply pixels to get millimeters (inverse pxtomm = 0.264583)
-var mmtopx = 3.779528;
+var MMTOPX = 3.779528;
 var CORRECT_VERTICAL_POSITION_SCALE = 100;
-var startX = 20;
+var STARTX = 20;
 var new_scale_abscissa_addx = 40;
-var debug = true;
+var DEBUG = true;
 var array_ruler = [];
 
 $(document).ready(function() {
@@ -11,7 +11,7 @@ $(document).ready(function() {
     var parameter = new parameters();
     parameter.display();
     //build the rulers
-    var ruler1 = new ruler(0, startX);
+    var ruler1 = new ruler(0, STARTX);
     ruler1.updateVariables();
     array_ruler.push(ruler1);
     drawAllrulers();
@@ -19,8 +19,8 @@ $(document).ready(function() {
     var scalelist = new scale_list();
     scalelist.display();
 
-    if (debug) {
-        displayDebug();
+    if (DEBUG) {
+        displayDEBUG();
     } //prints all values to browser console
 });
 
@@ -89,7 +89,7 @@ function drawAllrulers() {
     len = array_ruler.length;
     var index;
     for (index = 0; index < len; index+=1) {
-        array_ruler[index].abscissa = startX + index * new_scale_abscissa_addx;
+        array_ruler[index].abscissa = STARTX + index * new_scale_abscissa_addx;
         array_ruler[index].buildRuler();
     }
     paper.view.draw();
@@ -99,8 +99,8 @@ var printDiv = function() {
     window.print();
 };
 
-var displayDebug = function() {
-    //print the debug infos in console
+var displayDEBUG = function() {
+    //print the DEBUG infos in console
     console.info("--All the variables---");
     console.info(array_ruler);
 };
@@ -130,8 +130,8 @@ var load_parameters = function(parameters) {
 
     drawAllrulers();
     paper.view.draw();
-    if (debug) {
-        displayDebug();
+    if (DEBUG) {
+        displayDEBUG();
     } //prints all values to browser console
 };
 
@@ -276,7 +276,7 @@ function ruler(id, abscissa) {
                 this.arrayTickValues[i] = this.arrayTickValues[i] - this.arrayTickValues[this.high];
             }
         }
-        if (debug) {
+        if (DEBUG) {
             console.log(this.arrayTickValues);
         };
     };
@@ -294,7 +294,7 @@ function ruler(id, abscissa) {
             }
         }
         this.arrayTickValues[this.high] = 0;
-        if (debug) {
+        if (DEBUG) {
             console.log(this.arrayAlcoholValues);
         };
     };
@@ -320,14 +320,14 @@ function ruler(id, abscissa) {
     this.displayVerticalline = function() {
         //displays the vertical line of a ruler
         if (this.VerticalLine) {
-            this.displayLine(this.abscissa * mmtopx, CORRECT_VERTICAL_POSITION_SCALE, this.abscissa * mmtopx, this.arrayTickValues[this.low] * mmtopx + CORRECT_VERTICAL_POSITION_SCALE, "1", this.scaleColor);
+            this.displayLine(this.abscissa * MMTOPX, CORRECT_VERTICAL_POSITION_SCALE, this.abscissa * MMTOPX, this.arrayTickValues[this.low] * MMTOPX + CORRECT_VERTICAL_POSITION_SCALE, "1", this.scaleColor);
         }
     };
 
     this.displayBorders = function() {
         //displays the borders of a ruler
         if (this.Borders) {
-            var rectangle = new paper.Rectangle(new paper.Point((this.abscissa - 20) * mmtopx, 0), new paper.Size(40 * mmtopx, (this.arrayTickValues[this.low] + 80) * mmtopx));
+            var rectangle = new paper.Rectangle(new paper.Point((this.abscissa - 20) * MMTOPX, 0), new paper.Size(40 * MMTOPX, (this.arrayTickValues[this.low] + 80) * MMTOPX));
             var path = new paper.Path.Rectangle(rectangle);
             path.strokeColor = "black";
         }
@@ -339,18 +339,18 @@ function ruler(id, abscissa) {
         for (i = this.MIN_ALCOHOL_VALUE; i <= this.MAX_ALCOHOL_VALUE; i += this.ALCOHOL_INCREMENT) {
             j += 5;
             if (i % 1 == 0) {
-                this.displayLine(this.abscissa * mmtopx + this.line2length * mmtopx,
-                    this.arrayAlcoholValues[i] * mmtopx + CORRECT_VERTICAL_POSITION_SCALE,
-                    this.abscissa * mmtopx,
-                    this.arrayAlcoholValues[i] * mmtopx + CORRECT_VERTICAL_POSITION_SCALE,
+                this.displayLine(this.abscissa * MMTOPX + this.line2length * MMTOPX,
+                    this.arrayAlcoholValues[i] * MMTOPX + CORRECT_VERTICAL_POSITION_SCALE,
+                    this.abscissa * MMTOPX,
+                    this.arrayAlcoholValues[i] * MMTOPX + CORRECT_VERTICAL_POSITION_SCALE,
                     "1",
                     this.scaleColor);
-                this.displayText(i, this.abscissa * mmtopx + 7, this.arrayAlcoholValues[i] * mmtopx - 5 + CORRECT_VERTICAL_POSITION_SCALE, "left", 0, this.scaleColor);
+                this.displayText(i, this.abscissa * MMTOPX + 7, this.arrayAlcoholValues[i] * MMTOPX - 5 + CORRECT_VERTICAL_POSITION_SCALE, "left", 0, this.scaleColor);
             } else {
-                this.displayLine(this.abscissa * mmtopx + this.line3length * mmtopx,
-                    this.arrayAlcoholValues[i] * mmtopx + CORRECT_VERTICAL_POSITION_SCALE,
-                    this.abscissa * mmtopx,
-                    this.arrayAlcoholValues[i] * mmtopx + CORRECT_VERTICAL_POSITION_SCALE,
+                this.displayLine(this.abscissa * MMTOPX + this.line3length * MMTOPX,
+                    this.arrayAlcoholValues[i] * MMTOPX + CORRECT_VERTICAL_POSITION_SCALE,
+                    this.abscissa * MMTOPX,
+                    this.arrayAlcoholValues[i] * MMTOPX + CORRECT_VERTICAL_POSITION_SCALE,
                     "1",
                     this.scaleColor);
             }
@@ -363,25 +363,25 @@ function ruler(id, abscissa) {
         for (i = this.high; i <= this.low; i+=1) {
             j += 5;
             if (i % 10 == 0.0 && i >= this.high) {
-                this.displayLine(this.abscissa * mmtopx - this.line1length * mmtopx,
-                    this.arrayTickValues[i] * mmtopx + CORRECT_VERTICAL_POSITION_SCALE,
-                    this.abscissa * mmtopx,
-                    this.arrayTickValues[i] * mmtopx + CORRECT_VERTICAL_POSITION_SCALE,
+                this.displayLine(this.abscissa * MMTOPX - this.line1length * MMTOPX,
+                    this.arrayTickValues[i] * MMTOPX + CORRECT_VERTICAL_POSITION_SCALE,
+                    this.abscissa * MMTOPX,
+                    this.arrayTickValues[i] * MMTOPX + CORRECT_VERTICAL_POSITION_SCALE,
                     this.line1size,
                     this.displaySpecialValue(this, this.arrayListSpecialValues, this.arraySpecialValues, i));
-                this.displayText(i, this.abscissa * mmtopx - 30 + 19, this.arrayTickValues[i] * mmtopx - 2 + CORRECT_VERTICAL_POSITION_SCALE, "right", 0, this.scaleColor);
+                this.displayText(i, this.abscissa * MMTOPX - 30 + 19, this.arrayTickValues[i] * MMTOPX - 2 + CORRECT_VERTICAL_POSITION_SCALE, "right", 0, this.scaleColor);
             } else if (i % 5 == 0) {
-                this.displayLine(this.abscissa * mmtopx - this.line2length * mmtopx,
-                    this.arrayTickValues[i] * mmtopx + CORRECT_VERTICAL_POSITION_SCALE,
-                    this.abscissa * mmtopx,
-                    this.arrayTickValues[i] * mmtopx + CORRECT_VERTICAL_POSITION_SCALE,
+                this.displayLine(this.abscissa * MMTOPX - this.line2length * MMTOPX,
+                    this.arrayTickValues[i] * MMTOPX + CORRECT_VERTICAL_POSITION_SCALE,
+                    this.abscissa * MMTOPX,
+                    this.arrayTickValues[i] * MMTOPX + CORRECT_VERTICAL_POSITION_SCALE,
                     this.line1size,
                     this.displaySpecialValue(this, this.arrayListSpecialValues, this.arraySpecialValues, i));
             } else {
-                this.displayLine(this.abscissa * mmtopx - this.line3length * mmtopx,
-                    this.arrayTickValues[i] * mmtopx + CORRECT_VERTICAL_POSITION_SCALE,
-                    this.abscissa * mmtopx,
-                    this.arrayTickValues[i] * mmtopx + CORRECT_VERTICAL_POSITION_SCALE,
+                this.displayLine(this.abscissa * MMTOPX - this.line3length * MMTOPX,
+                    this.arrayTickValues[i] * MMTOPX + CORRECT_VERTICAL_POSITION_SCALE,
+                    this.abscissa * MMTOPX,
+                    this.arrayTickValues[i] * MMTOPX + CORRECT_VERTICAL_POSITION_SCALE,
                     this.line1size,
                     this.displaySpecialValue(this, this.arrayListSpecialValues, this.arraySpecialValues, i));
             }
@@ -400,13 +400,13 @@ function ruler(id, abscissa) {
 
     this.displayAlltexts = function() {
         //Displays fixed texts for a rule.
-        this.displayText("Masse volumique", this.abscissa * mmtopx - 70, this.arrayTickValues[this.low] * mmtopx + 60 + CORRECT_VERTICAL_POSITION_SCALE, "left", -90, this.scaleColor);
-        this.displayText("g/l (05) 20ºC", this.abscissa * mmtopx - 45, this.arrayTickValues[this.low] * mmtopx + 60 + CORRECT_VERTICAL_POSITION_SCALE, "left", -90, this.scaleColor);
-        this.displayText("Alcool probable", this.abscissa * mmtopx - 35, this.arrayTickValues[this.low] * mmtopx + 60 + CORRECT_VERTICAL_POSITION_SCALE, "left", -90, this.scaleColor);
-        this.displayText("MUSTIMETRIE", this.abscissa * mmtopx - 11, this.arrayTickValues[this.low] * mmtopx + 120 + CORRECT_VERTICAL_POSITION_SCALE, "center", 0, this.scaleColor);
-        this.displayText("DUJARDIN", this.abscissa * mmtopx - 11, this.arrayTickValues[this.low] * mmtopx + 140 + CORRECT_VERTICAL_POSITION_SCALE, "center", 0, this.scaleColor);
-        this.displayText("SALLERON", this.abscissa * mmtopx - 11, this.arrayTickValues[this.low] * mmtopx + 160 + CORRECT_VERTICAL_POSITION_SCALE, "center", 0, this.scaleColor);
-        this.displayText("1683 grammes de sucre par hecto", this.abscissa * mmtopx + 10, this.arrayAlcoholValues[this.MIN_ALCOHOL_VALUE] * mmtopx - 100 + CORRECT_VERTICAL_POSITION_SCALE, "center", -90, this.scaleColor);
-        this.displayText("produisent 1% d'alcool", this.abscissa * mmtopx + 20, this.arrayAlcoholValues[this.MIN_ALCOHOL_VALUE] * mmtopx - 100 + CORRECT_VERTICAL_POSITION_SCALE, "center", -90, this.scaleColor);
+        this.displayText("Masse volumique", this.abscissa * MMTOPX - 70, this.arrayTickValues[this.low] * MMTOPX + 60 + CORRECT_VERTICAL_POSITION_SCALE, "left", -90, this.scaleColor);
+        this.displayText("g/l (05) 20ºC", this.abscissa * MMTOPX - 45, this.arrayTickValues[this.low] * MMTOPX + 60 + CORRECT_VERTICAL_POSITION_SCALE, "left", -90, this.scaleColor);
+        this.displayText("Alcool probable", this.abscissa * MMTOPX - 35, this.arrayTickValues[this.low] * MMTOPX + 60 + CORRECT_VERTICAL_POSITION_SCALE, "left", -90, this.scaleColor);
+        this.displayText("MUSTIMETRIE", this.abscissa * MMTOPX - 11, this.arrayTickValues[this.low] * MMTOPX + 120 + CORRECT_VERTICAL_POSITION_SCALE, "center", 0, this.scaleColor);
+        this.displayText("DUJARDIN", this.abscissa * MMTOPX - 11, this.arrayTickValues[this.low] * MMTOPX + 140 + CORRECT_VERTICAL_POSITION_SCALE, "center", 0, this.scaleColor);
+        this.displayText("SALLERON", this.abscissa * MMTOPX - 11, this.arrayTickValues[this.low] * MMTOPX + 160 + CORRECT_VERTICAL_POSITION_SCALE, "center", 0, this.scaleColor);
+        this.displayText("1683 grammes de sucre par hecto", this.abscissa * MMTOPX + 10, this.arrayAlcoholValues[this.MIN_ALCOHOL_VALUE] * MMTOPX - 100 + CORRECT_VERTICAL_POSITION_SCALE, "center", -90, this.scaleColor);
+        this.displayText("produisent 1% d'alcool", this.abscissa * MMTOPX + 20, this.arrayAlcoholValues[this.MIN_ALCOHOL_VALUE] * MMTOPX - 100 + CORRECT_VERTICAL_POSITION_SCALE, "center", -90, this.scaleColor);
     };
 };
